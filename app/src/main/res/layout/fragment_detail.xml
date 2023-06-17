@@ -50,10 +50,10 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/text"
+            android:textCursorDrawable="@drawable/text_field_cursor"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="top|start"
-            android:textCursorDrawable="@drawable/text_field_cursor" />
+            android:gravity="top|start" />
 
     </com.google.android.material.textfield.TextInputLayout>
 

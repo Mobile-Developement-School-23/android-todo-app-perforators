@@ -19,7 +19,7 @@ class DetailViewModel(
     private val repository: TodoItemsRepository = TodoItemsRepositoryImpl
 ) : ViewModel() {
 
-    private val _item = MutableStateFlow(TodoItem.empty())
+    private val _item = MutableStateFlow(TodoItem.createEmpty())
     val item = _item.asStateFlow()
 
     private val _events = Channel<Event>(BUFFERED)
@@ -49,7 +49,6 @@ class DetailViewModel(
             text = text,
             importance = importance,
             deadline = deadline,
-            creationDate = currentDate,
             changeData = if (itemId.isNotEmpty()) currentDate else null
         )
         repository.save(newItem)

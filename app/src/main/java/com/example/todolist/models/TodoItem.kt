@@ -12,7 +12,7 @@ data class TodoItem(
     val deadline: Date? = null,
 ) {
     companion object {
-        fun empty() = TodoItem(
+        fun createEmpty() = TodoItem(
             id = "${System.currentTimeMillis()}",
             text = "",
             importance = Importance.NORMAL,
