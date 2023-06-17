@@ -1,5 +1,6 @@
 <resources>
     <style name="Theme.ToDo" parent="Theme.MaterialComponents.DayNight.NoActionBar" >
         <item name="android:statusBarColor">@color/back_primary</item>
+        <item name="colorPrimary">@color/label_primary</item>
     </style>
 </resources>
