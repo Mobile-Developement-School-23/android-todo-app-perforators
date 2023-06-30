@@ -1,4 +1,4 @@
-package com.example.todolist.screens.todoitems
+package com.example.todolist.presentation.todoitems
 
 import android.graphics.Paint.STRIKE_THRU_TEXT_FLAG
 import android.view.LayoutInflater
@@ -13,9 +13,9 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.example.todolist.R
-import com.example.todolist.models.Importance
-import com.example.todolist.models.TodoItem
-import com.example.todolist.util.convertToString
+import com.example.todolist.domain.models.Importance
+import com.example.todolist.domain.models.TodoItem
+import com.example.todolist.presentation.convertToString
 
 class TodoListAdapter(
     private val onItemClick: (TodoItem) -> Unit,

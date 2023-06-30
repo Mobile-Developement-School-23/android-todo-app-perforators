@@ -1,4 +1,4 @@
-package com.example.todolist.models
+package com.example.todolist.domain.models
 
 import java.util.Date
 

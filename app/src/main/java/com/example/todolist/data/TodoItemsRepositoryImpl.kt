@@ -1,7 +1,8 @@
-package com.example.todolist.storage
+package com.example.todolist.data
 
-import com.example.todolist.models.Importance
-import com.example.todolist.models.TodoItem
+import com.example.todolist.domain.TodoItemsRepository
+import com.example.todolist.domain.models.Importance
+import com.example.todolist.domain.models.TodoItem
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map

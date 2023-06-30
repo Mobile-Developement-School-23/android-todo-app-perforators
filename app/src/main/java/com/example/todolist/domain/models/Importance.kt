@@ -1,4 +1,4 @@
-package com.example.todolist.models
+package com.example.todolist.domain.models
 
 enum class Importance(val id: Int) {
     LOW(0), NORMAL(1), HIGH(2)

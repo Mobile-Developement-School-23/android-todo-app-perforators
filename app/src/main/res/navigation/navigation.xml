@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/todoListFragment"
-        android:name="com.example.todolist.screens.todoitems.TodoListFragment"
+        android:name="com.example.todolist.presentation.todoitems.TodoListFragment"
         android:label="TodoListFragment" >
         <action
             android:id="@+id/action_todoListFragment_to_detailFragment"
@@ -14,7 +14,7 @@
     </fragment>
     <fragment
         android:id="@+id/detailFragment"
-        android:name="com.example.todolist.screens.detail.DetailFragment"
+        android:name="com.example.todolist.presentation.detail.DetailFragment"
         android:label="TodoItemDetailFragment" >
         <argument
             android:name="itemId"

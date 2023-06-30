@@ -1,4 +1,4 @@
-package com.example.todolist.screens.detail
+package com.example.todolist.presentation.detail
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

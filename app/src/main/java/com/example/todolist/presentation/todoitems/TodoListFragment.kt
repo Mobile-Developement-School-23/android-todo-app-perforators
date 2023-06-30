@@ -1,4 +1,4 @@
-package com.example.todolist.screens.todoitems
+package com.example.todolist.presentation.todoitems
 
 import android.os.Bundle
 import android.view.View

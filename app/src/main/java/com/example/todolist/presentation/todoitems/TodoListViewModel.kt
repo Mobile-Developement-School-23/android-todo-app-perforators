@@ -1,10 +1,10 @@
-package com.example.todolist.screens.todoitems
+package com.example.todolist.presentation.todoitems
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.todolist.models.TodoItem
-import com.example.todolist.storage.TodoItemsRepository
-import com.example.todolist.storage.TodoItemsRepositoryImpl
+import com.example.todolist.domain.models.TodoItem
+import com.example.todolist.domain.TodoItemsRepository
+import com.example.todolist.data.TodoItemsRepositoryImpl
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.Channel.Factory.BUFFERED
 import kotlinx.coroutines.flow.Flow

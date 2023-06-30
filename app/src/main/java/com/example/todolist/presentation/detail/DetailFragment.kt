@@ -1,4 +1,4 @@
-package com.example.todolist.screens.detail
+package com.example.todolist.presentation.detail
 
 import android.app.DatePickerDialog
 import android.os.Bundle
@@ -13,10 +13,10 @@ import androidx.navigation.fragment.navArgs
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.example.todolist.R
 import com.example.todolist.databinding.FragmentDetailBinding
-import com.example.todolist.models.TodoItem
-import com.example.todolist.models.importanceFrom
-import com.example.todolist.util.convertToDate
-import com.example.todolist.util.convertToString
+import com.example.todolist.domain.models.TodoItem
+import com.example.todolist.domain.models.importanceFrom
+import com.example.todolist.presentation.convertToDate
+import com.example.todolist.presentation.convertToString
 import kotlinx.coroutines.launch
 import java.util.Calendar
 
