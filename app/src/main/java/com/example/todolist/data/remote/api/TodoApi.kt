@@ -30,15 +30,20 @@ interface TodoApi {
 
    @POST("list")
    suspend fun addNewTodo(
+      @Header("X-Last-Known-Revision") revision: Int,
       @Body saveNewTodoRequest: SaveNewTodoRequest
    ): Response<OneItemResponse>
 
    @PUT("list/{id}")
    suspend fun editTodo(
+      @Header("X-Last-Known-Revision") revision: Int,
       @Path("id") id: String,
       @Body saveNewTodoRequest: SaveNewTodoRequest
    ): Response<OneItemResponse>
 
    @DELETE("list/{id}")
-   suspend fun delete(@Path("id") id: String): Response<OneItemResponse>
+   suspend fun delete(
+      @Header("X-Last-Known-Revision") revision: Int,
+      @Path("id") id: String
+   ): Response<OneItemResponse>
 }

@@ -12,16 +12,15 @@ data class TodoItem(
     val creationDate: Date,
     val changeData: Date,
     val deadline: Date? = null,
-    val lastUpdatedBy: String
+    val lastUpdatedBy: String = ""
 ) {
     companion object {
-        fun createEmpty(deviceId: String) = TodoItem(
+        fun createEmpty() = TodoItem(
             id = UUID.randomUUID().toString(),
             text = "",
             importance = Importance.NORMAL,
             isDone = false,
             creationDate = Date(System.currentTimeMillis()),
-            lastUpdatedBy = deviceId,
             changeData = System.currentTimeMillis().convertToDate()
         )
     }

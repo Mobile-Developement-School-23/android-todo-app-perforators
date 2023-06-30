@@ -1,7 +1,12 @@
 package com.example.todolist.di.application
 
 import android.content.Context
+import com.example.todolist.di.application.modules.CoreModule
 import com.example.todolist.di.application.modules.NetworkModule
+import com.example.todolist.di.application.modules.PersistenceModule
+import com.example.todolist.di.application.modules.RepositoryModule
+import com.example.todolist.di.detail.DetailScreenDependencies
+import com.example.todolist.di.todoitems.TodoItemsScreenDependencies
 import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Singleton
@@ -9,8 +14,11 @@ import javax.inject.Singleton
 @Singleton
 @Component(modules = [
     NetworkModule::class,
+    PersistenceModule::class,
+    RepositoryModule::class,
+    CoreModule::class
 ])
-interface ApplicationComponent {
+interface ApplicationComponent : DetailScreenDependencies, TodoItemsScreenDependencies {
 
     @Component.Factory
     interface Factory {

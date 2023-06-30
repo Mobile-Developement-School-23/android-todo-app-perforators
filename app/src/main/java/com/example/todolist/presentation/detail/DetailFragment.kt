@@ -1,6 +1,7 @@
 package com.example.todolist.presentation.detail
 
 import android.app.DatePickerDialog
+import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
@@ -12,27 +13,40 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.example.todolist.R
+import com.example.todolist.appComponent
 import com.example.todolist.databinding.FragmentDetailBinding
+import com.example.todolist.di.detail.DaggerDetailScreenComponent
 import com.example.todolist.domain.models.TodoItem
 import com.example.todolist.domain.models.importanceFrom
 import com.example.todolist.utils.convertToDate
 import com.example.todolist.utils.convertToString
 import kotlinx.coroutines.launch
 import java.util.Calendar
+import javax.inject.Inject
 
 class DetailFragment : Fragment(R.layout.fragment_detail) {
+
+    @Inject
+    internal lateinit var viewModelFactory: DetailViewModelFactory
 
     private val binding: FragmentDetailBinding by viewBinding(
         FragmentDetailBinding::bind
     )
     private val args by navArgs<DetailFragmentArgs>()
-    private val factory: DetailViewModelFactory by lazy {
-        DetailViewModelFactory(args.itemId)
+    private val viewModel: DetailViewModel by viewModels { viewModelFactory }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        DaggerDetailScreenComponent.factory()
+            .create(appComponent())
+            .inject(this)
     }
-    private val viewModel: DetailViewModel by viewModels { factory }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        viewModel.loadItem(args.itemId)
+
         binding.cancel.setOnClickListener {
             viewModel.cancel()
         }
@@ -47,6 +61,7 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
                 deadline = if (date.isNotEmpty()) date.convertToDate() else null
             )
         }
+
         if (args.itemId.isEmpty()) {
             binding.delete.setImageResource(R.drawable.delete_disable)
             binding.deleteText.setTextColor(requireContext().getColor(R.color.label_disable))
@@ -57,6 +72,7 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
                 viewModel.delete()
             }
         }
+
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.item
                 .flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.STARTED)

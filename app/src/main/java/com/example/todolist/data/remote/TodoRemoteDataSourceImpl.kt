@@ -1,15 +1,17 @@
 package com.example.todolist.data.remote
 
 import com.example.todolist.data.remote.api.TodoApi
+import com.example.todolist.data.remote.api.requests.SaveNewTodoRequest
 import com.example.todolist.data.remote.api.requests.UpdateTodoListRequest
 import com.example.todolist.data.remote.mappers.ResponseMapper
-import com.example.todolist.data.remote.mappers.TodoMapper
+import com.example.todolist.data.remote.mappers.RemoteTodoMapper
 import com.example.todolist.domain.models.TodoItem
+import javax.inject.Inject
 
-class TodoRemoteDataSourceImpl(
+class TodoRemoteDataSourceImpl @Inject constructor(
     private val api: TodoApi,
     private val responseMapper: ResponseMapper,
-    private val todoMapper: TodoMapper
+    private val todoMapper: RemoteTodoMapper
 ) : TodoRemoteDataSource {
 
     override suspend fun fetchTodoList() = doNetworkAction {
@@ -28,7 +30,25 @@ class TodoRemoteDataSourceImpl(
         currentList: List<TodoItem>,
         lastKnownRevision: Int
     ) = doNetworkAction {
-        api.updateList(lastKnownRevision, UpdateTodoListRequest(todoMapper.map(currentList)))
+        api.updateList(lastKnownRevision, UpdateTodoListRequest(todoMapper.mapItemList(currentList)))
+    }.mapSuccess {
+        responseMapper.map(it)
+    }
+
+    override suspend fun addNew(revision: Int, item: TodoItem) = doNetworkAction {
+        api.addNewTodo(revision, SaveNewTodoRequest(todoMapper.map(item)))
+    }.mapSuccess {
+        responseMapper.map(it)
+    }
+
+    override suspend fun edit(revision: Int, item: TodoItem) = doNetworkAction {
+        api.editTodo(revision, item.id, SaveNewTodoRequest(todoMapper.map(item)))
+    }.mapSuccess {
+        responseMapper.map(it)
+    }
+
+    override suspend fun delete(revision: Int, id: String) = doNetworkAction {
+        api.delete(revision, id)
     }.mapSuccess {
         responseMapper.map(it)
     }

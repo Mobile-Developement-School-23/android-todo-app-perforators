@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.todolist.domain.models.Importance
 import com.example.todolist.domain.models.TodoItem
 import com.example.todolist.domain.TodoItemsRepository
-import com.example.todolist.data.TodoItemsRepositoryImpl
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.Channel.Factory.BUFFERED
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,8 +14,7 @@ import kotlinx.coroutines.launch
 import java.util.Date
 
 class DetailViewModel(
-    private val itemId: String,
-    private val repository: TodoItemsRepository = TodoItemsRepositoryImpl
+    private val repository: TodoItemsRepository
 ) : ViewModel() {
 
     private val _item = MutableStateFlow(TodoItem.createEmpty())
@@ -25,21 +23,27 @@ class DetailViewModel(
     private val _events = Channel<Event>(BUFFERED)
     val events = _events.receiveAsFlow()
 
-    init {
-        if (itemId.isNotEmpty()) loadItem()
-    }
+    private var itemId: String = ""
 
-    private fun loadItem() {
+    fun loadItem(itemId: String) {
+        this.itemId = itemId
+        if (itemId.isEmpty()) return
         viewModelScope.launch {
             repository.fetchOne(itemId)
                 .onSuccess { _item.value = it }
-                .onFailure { _events.send(Event.GoBack) }
+                .onFailure {
+                    _events.send(Event.ShowError(it.message.toString()))
+                    _events.send(Event.GoBack)
+                }
         }
     }
 
     fun delete() {
-        repository.remove(_item.value)
-        cancel()
+        viewModelScope.launch {
+            repository.remove(_item.value)
+                .onFailure { _events.send(Event.ShowError(it.message.toString())) }
+            cancel()
+        }
     }
 
     fun save(text: String, importance: Importance, deadline: Date?) {
@@ -49,10 +53,16 @@ class DetailViewModel(
             text = text,
             importance = importance,
             deadline = deadline,
-            changeData = if (itemId.isNotEmpty()) currentDate else null
+            changeData = currentDate
         )
-        repository.save(newItem)
-        cancel()
+        viewModelScope.launch {
+            if (itemId.isEmpty()) {
+                repository.addNew(newItem)
+            } else {
+                repository.edit(newItem)
+            }.onFailure { _events.send(Event.ShowError(it.message.toString())) }
+            cancel()
+        }
     }
 
     fun showDatePicker() {
@@ -69,6 +79,8 @@ class DetailViewModel(
 
     sealed interface Event {
         object ShowDatePicker : Event
+
+        data class ShowError(val text: String) : Event
         object GoBack : Event
     }
 }

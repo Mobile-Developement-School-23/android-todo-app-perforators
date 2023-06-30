@@ -1,7 +1,9 @@
 package com.example.todolist.di.application.modules
 
+import com.example.todolist.data.remote.api.HeaderInterceptor
 import com.example.todolist.data.remote.api.TodoApi
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
+import dagger.Module
 import dagger.Provides
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
@@ -11,6 +13,7 @@ import retrofit2.Converter
 import retrofit2.Retrofit
 import javax.inject.Singleton
 
+@Module
 class NetworkModule {
 
     @Provides
@@ -35,10 +38,12 @@ class NetworkModule {
     @Provides
     @Singleton
     fun provideOkHttpClient(
-        httpLoggingInterceptor: HttpLoggingInterceptor
+        httpLoggingInterceptor: HttpLoggingInterceptor,
+        headerInterceptor: HeaderInterceptor
     ): OkHttpClient {
         return OkHttpClient.Builder()
             .addInterceptor(httpLoggingInterceptor)
+            .addInterceptor(headerInterceptor)
             .build()
     }
 
@@ -59,9 +64,14 @@ class NetworkModule {
         }
     }
 
+    @Provides
+    fun provideHeaderInterceptor(): HeaderInterceptor {
+        return HeaderInterceptor(API_KEY)
+    }
+
     companion object {
 
-        //private const val API_KEY = "OXsZOSOmAeIN4s0cdl2p97AYGu32XQuk"
+        private const val API_KEY = "overshelving"
         private const val BASE_URL = "https://beta.mrdekk.ru/todobackend/"
         private const val CONTENT_TYPE = "application/json"
     }

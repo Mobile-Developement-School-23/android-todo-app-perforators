@@ -1,5 +1,6 @@
-package com.example.todolist.data.local
+package com.example.todolist.data.local.sources
 
+import com.example.todolist.data.local.database.SyncStatus
 import com.example.todolist.data.synchronizer.SyncItem
 import com.example.todolist.domain.models.TodoItem
 import kotlinx.coroutines.flow.Flow
@@ -12,7 +13,9 @@ interface TodoLocalDataSource {
 
     suspend fun fetchBy(id: String): List<TodoItem>
 
-    suspend fun insertOne(todoItem: TodoItem)
+    suspend fun delete(id: String)
+
+    suspend fun insertOne(todoItem: TodoItem, syncStatus: SyncStatus)
 
     suspend fun replaceAll(newItems: List<TodoItem>)
 }

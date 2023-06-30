@@ -6,14 +6,15 @@ import com.example.todolist.data.local.database.TodoEntity
 import com.example.todolist.domain.models.TodoItem
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
-class TodoMapper {
+class LocalTodoMapper @Inject constructor() {
 
-    fun map(entities: Flow<List<TodoEntity>>) = entities.map { map(it) }
+    fun mapEntitiesFlow(entities: Flow<List<TodoEntity>>) = entities.map { mapEntities(it) }
 
-    fun map(items: List<TodoItem>) = items.map { map(it) }
+    fun mapItems(items: List<TodoItem>) = items.map { mapItem(it) }
 
-    fun map(entity: TodoEntity) = TodoItem(
+    fun mapEntity(entity: TodoEntity) = TodoItem(
         id = entity.id,
         text = entity.text,
         importance = entity.importance,
@@ -24,9 +25,9 @@ class TodoMapper {
         lastUpdatedBy = entity.lastUpdatedBy
     )
 
-    fun map(entities: List<TodoEntity>) = entities.map { map(it) }
+    fun mapEntities(entities: List<TodoEntity>) = entities.map { mapEntity(it) }
 
-    fun map(item: TodoItem) = TodoEntity(
+    fun mapItem(item: TodoItem, syncStatus: SyncStatus = SyncStatus.SYNCHRONIZED) = TodoEntity(
         id = item.id,
         text = item.text,
         importance = item.importance,
@@ -35,6 +36,6 @@ class TodoMapper {
         changeData = item.changeData.time,
         deadline = item.deadline?.time,
         lastUpdatedBy = item.lastUpdatedBy,
-        syncStatus = SyncStatus.SYNCHRONIZED
+        syncStatus = syncStatus
     )
 }

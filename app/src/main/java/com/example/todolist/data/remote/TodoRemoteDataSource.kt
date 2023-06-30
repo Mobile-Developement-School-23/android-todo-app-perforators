@@ -12,4 +12,10 @@ interface TodoRemoteDataSource {
         currentList: List<TodoItem>,
         lastKnownRevision: Int
     ): NetworkResult<RevisionData<List<TodoItem>>>
+
+    suspend fun addNew(revision: Int, item: TodoItem): NetworkResult<RevisionData<TodoItem>>
+
+    suspend fun edit(revision: Int, item: TodoItem): NetworkResult<RevisionData<TodoItem>>
+
+    suspend fun delete(revision: Int, id: String): NetworkResult<RevisionData<TodoItem>>
 }

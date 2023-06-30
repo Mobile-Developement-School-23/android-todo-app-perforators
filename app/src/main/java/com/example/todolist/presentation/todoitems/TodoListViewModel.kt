@@ -40,14 +40,17 @@ class TodoListViewModel(
 
     fun loadAll() = viewModelScope.launch {
         repository.fetchAll()
+            .onFailure { _events.send(Event.ShowError(it.message.toString())) }
     }
 
     fun toggleDone(item: TodoItem) = viewModelScope.launch {
         repository.edit(item.copy(isDone = item.isDone.not()))
+            .onFailure { _events.send(Event.ShowError(it.message.toString())) }
     }
 
     fun removeItemBy(index: Int) = viewModelScope.launch {
         repository.remove(state.value.items[index])
+            .onFailure { _events.send(Event.ShowError(it.message.toString())) }
     }
 
     fun toggleShowingItems() {
@@ -77,6 +80,7 @@ class TodoListViewModel(
 
     sealed interface Event {
         object CreateNewTodoItem : Event
+        data class ShowError(val text: String) : Event
         data class EditTodoItem(val itemId: String) : Event
     }
 }

@@ -1,5 +1,6 @@
 package com.example.todolist.presentation.todoitems
 
+import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
@@ -13,14 +14,27 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.example.todolist.R
+import com.example.todolist.appComponent
 import com.example.todolist.databinding.FragmentTodoitemsBinding
+import com.example.todolist.di.todoitems.DaggerTodoItemsScreenComponent
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 class TodoListFragment : Fragment(R.layout.fragment_todoitems) {
 
+    @Inject
+    internal lateinit var viewModelFactory: TodoListViewModelFactory
+
     private val binding: FragmentTodoitemsBinding by viewBinding(FragmentTodoitemsBinding::bind)
-    private val viewModel: TodoListViewModel by viewModels()
+    private val viewModel: TodoListViewModel by viewModels { viewModelFactory }
     private lateinit var adapter: TodoListAdapter
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        DaggerTodoItemsScreenComponent.factory()
+            .create(appComponent())
+            .inject(this)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

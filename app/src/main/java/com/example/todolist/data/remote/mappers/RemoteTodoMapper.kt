@@ -5,15 +5,15 @@ import com.example.todolist.data.remote.api.dto.TodoDto
 import com.example.todolist.domain.models.TodoItem
 import javax.inject.Inject
 
-class TodoMapper @Inject constructor(
+class RemoteTodoMapper @Inject constructor(
     private val importanceMapper: ImportanceMapper
 ) {
 
-    fun map(todoDtoList: List<TodoDto>): List<TodoItem> {
+    fun mapTodoList(todoDtoList: List<TodoDto>): List<TodoItem> {
         return todoDtoList.map(::map)
     }
 
-    fun map(todoItemList: List<TodoItem>): List<TodoDto> {
+    fun mapItemList(todoItemList: List<TodoItem>): List<TodoDto> {
         return todoItemList.map(::map)
     }
 

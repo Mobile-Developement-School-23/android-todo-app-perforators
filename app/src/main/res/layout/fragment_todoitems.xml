@@ -57,6 +57,7 @@
         android:id="@+id/count_completed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
         android:textColor="@color/label_tertiary"
         app:layout_constraintBottom_toBottomOf="@+id/completed_title"
         app:layout_constraintStart_toEndOf="@+id/completed_title"
