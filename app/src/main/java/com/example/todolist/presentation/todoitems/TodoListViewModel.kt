@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.todolist.domain.models.TodoItem
 import com.example.todolist.domain.TodoItemsRepository
-import com.example.todolist.data.TodoItemsRepositoryImpl
+import com.example.todolist.domain.models.Items
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.Channel.Factory.BUFFERED
 import kotlinx.coroutines.flow.Flow
@@ -17,27 +17,36 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class TodoListViewModel(
-    private val repository: TodoItemsRepository = TodoItemsRepositoryImpl
+    private val repository: TodoItemsRepository
 ) : ViewModel() {
 
     private val showAll = MutableStateFlow(false)
-    private val items: Flow<List<TodoItem>>
-        get() = repository.fetchAll()
+    private val items: Flow<Items>
+        get() = repository.observeAll()
 
-    val state = items.combine(showAll) { lastItems, showAll ->
+    val state = items.combine(showAll) { items, showAll ->
+        val (lastItems, areActual) = items
         val newItems = if (showAll) lastItems else lastItems.filter { it.isDone.not() }
         val countCompleted = lastItems.count { it.isDone }
-        ScreenState(newItems, countCompleted, showAll)
+        ScreenState(newItems, areActual, countCompleted, showAll)
     }.stateIn(viewModelScope, SharingStarted.Eagerly, ScreenState())
 
     private val _events = Channel<Event>(BUFFERED)
     val events = _events.receiveAsFlow()
 
-    fun toggleDone(item: TodoItem) {
-        repository.save(item.copy(isDone = item.isDone.not()))
+    init {
+        loadAll()
     }
 
-    fun removeItemBy(index: Int) {
+    fun loadAll() = viewModelScope.launch {
+        repository.fetchAll()
+    }
+
+    fun toggleDone(item: TodoItem) = viewModelScope.launch {
+        repository.edit(item.copy(isDone = item.isDone.not()))
+    }
+
+    fun removeItemBy(index: Int) = viewModelScope.launch {
         repository.remove(state.value.items[index])
     }
 
@@ -61,6 +70,7 @@ class TodoListViewModel(
 
     data class ScreenState(
         val items: List<TodoItem> = emptyList(),
+        val areActual: Boolean = false,
         val countCompleted: Int = 0,
         val areShownAllElements: Boolean = false
     )

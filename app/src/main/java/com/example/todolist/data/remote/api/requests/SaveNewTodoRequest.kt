@@ -5,6 +5,6 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class UpdateTodoListRequest(
-    @SerialName("list") val list: List<TodoDto>
+data class SaveNewTodoRequest(
+    @SerialName("element") val element: TodoDto
 )

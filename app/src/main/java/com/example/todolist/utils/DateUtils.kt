@@ -1,4 +1,4 @@
-package com.example.todolist.presentation
+package com.example.todolist.utils
 
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -13,6 +13,10 @@ fun Date.convertToString(dateFormat: SimpleDateFormat = defaultDateFormat): Stri
 
 fun String.convertToDate(dateFormat: SimpleDateFormat = defaultDateFormat): Date? {
     return dateFormat.parse(this)
+}
+
+fun Long.convertToDate(): Date {
+    return Date(this)
 }
 
 fun convertToString(day: Int, month: Int, year: Int): String {

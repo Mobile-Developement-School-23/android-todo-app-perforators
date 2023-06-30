@@ -15,8 +15,8 @@ import com.example.todolist.R
 import com.example.todolist.databinding.FragmentDetailBinding
 import com.example.todolist.domain.models.TodoItem
 import com.example.todolist.domain.models.importanceFrom
-import com.example.todolist.presentation.convertToDate
-import com.example.todolist.presentation.convertToString
+import com.example.todolist.utils.convertToDate
+import com.example.todolist.utils.convertToString
 import kotlinx.coroutines.launch
 import java.util.Calendar
 

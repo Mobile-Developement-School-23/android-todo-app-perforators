@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.example.todolist.R
 import com.example.todolist.domain.models.Importance
 import com.example.todolist.domain.models.TodoItem
-import com.example.todolist.presentation.convertToString
+import com.example.todolist.utils.convertToString
 
 class TodoListAdapter(
     private val onItemClick: (TodoItem) -> Unit,
