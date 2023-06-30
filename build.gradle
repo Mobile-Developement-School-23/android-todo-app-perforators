@@ -39,4 +39,5 @@ ext {
     retrofitVersion = '2.9.0'
     okHttpVersion = '5.0.0-alpha.2'
     serializationConverterVersion = '0.8.0'
+    daggerVersion = '2.41'
 }
