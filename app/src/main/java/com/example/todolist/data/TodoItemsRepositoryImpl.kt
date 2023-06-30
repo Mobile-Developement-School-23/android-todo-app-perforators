@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.update
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-object TodoItemsRepositoryImpl : TodoItemsRepository {
+class TodoItemsRepositoryImpl : TodoItemsRepository {
 
     private val items = MutableStateFlow(generateItems())
 

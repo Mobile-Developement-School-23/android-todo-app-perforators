@@ -1,6 +1,7 @@
 package com.example.todolist.domain.models
 
 import java.util.Date
+import java.util.UUID
 
 data class TodoItem(
     val id: String,
@@ -13,7 +14,7 @@ data class TodoItem(
 ) {
     companion object {
         fun createEmpty() = TodoItem(
-            id = "${System.currentTimeMillis()}",
+            id = UUID.randomUUID().toString(),
             text = "",
             importance = Importance.NORMAL,
             isDone = false,
