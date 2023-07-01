@@ -1,7 +1,7 @@
 package com.example.todolist.presentation
 
-import android.content.Intent
 import android.os.Bundle
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
@@ -17,45 +17,49 @@ import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var sdk: YandexAuthSdk
     private val authorizationViewModel: AuthorizationSharedViewModel by viewModels()
+    private lateinit var yandexSdk: YandexAuthSdk
+
+    private val authorizationLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if (it.resultCode == RESULT_LOGIN_SDK) {
+                try {
+                    val yandexAuthToken = yandexSdk.extractToken(it.resultCode, it.data)
+                    if (yandexAuthToken != null) {
+                        authorizationViewModel.send(
+                            AuthorizationSharedViewModel.AuthorizationResult.Success(
+                                yandexSdk.getJwt(yandexAuthToken)
+                            )
+                        )
+                    }
+                } catch (e: YandexAuthException) {
+                    authorizationViewModel.send(
+                        AuthorizationSharedViewModel.AuthorizationResult.Failure
+                    )
+                }
+
+            }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val sdk = YandexAuthSdk(this, YandexAuthOptions(this, loggingEnabled = true))
+        yandexSdk = YandexAuthSdk(this, YandexAuthOptions(this))
 
         lifecycleScope.launch {
             authorizationViewModel.authorizationEvent
                 .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
-                .collect {
-                    val loginOptionsBuilder = YandexAuthLoginOptions.Builder()
-                    val intent = sdk.createLoginIntent(loginOptionsBuilder.build())
-                    startActivity(intent)
-                }
+                .collect { authorize() }
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == REQUEST_LOGIN_SDK) {
-            try {
-                val yandexAuthToken = sdk.extractToken(resultCode, data)
-                if (yandexAuthToken != null) {
-                    authorizationViewModel.sendToken(
-                        AuthorizationSharedViewModel.AuthorizationResult.Success(sdk.getJwt(yandexAuthToken))
-                    )
-                }
-            } catch (e: YandexAuthException) {
-                authorizationViewModel.sendToken(
-                    AuthorizationSharedViewModel.AuthorizationResult.Failure
-                )
-            }
-            return
-        }
-        super.onActivityResult(requestCode, resultCode, data)
+    private fun authorize() {
+        val loginOptionsBuilder = YandexAuthLoginOptions.Builder()
+        val intent = yandexSdk.createLoginIntent(loginOptionsBuilder.build())
+        authorizationLauncher.launch(intent)
     }
 
     companion object {
-        private const val REQUEST_LOGIN_SDK = 1
+        private const val RESULT_LOGIN_SDK = 1
     }
 }

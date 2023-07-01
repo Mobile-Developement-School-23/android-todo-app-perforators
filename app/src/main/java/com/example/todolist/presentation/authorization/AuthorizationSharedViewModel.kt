@@ -20,7 +20,7 @@ class AuthorizationSharedViewModel : ViewModel() {
         }
     }
 
-    fun sendToken(result: AuthorizationResult) {
+    fun send(result: AuthorizationResult) {
         viewModelScope.launch {
             _authorizationResult.send(result)
         }
