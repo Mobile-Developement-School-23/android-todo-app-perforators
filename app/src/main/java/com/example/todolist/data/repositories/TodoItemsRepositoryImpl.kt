@@ -81,7 +81,7 @@ class TodoItemsRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun fetchOne(id: String): Result<TodoItem> {
+    override suspend fun fetchOne(id: String) = withContext(dispatcher) {
         try {
             repeatOnError(COUNT_REPEAT, REPEAT_DELAY) {
                 todoRemoteDataSource.fetchOne(id)
@@ -91,7 +91,7 @@ class TodoItemsRepositoryImpl @Inject constructor(
         } catch (e: Exception) {
             e.printStackTrace()
         }
-        return runCatching { todoLocalDataSource.fetchBy(id).first() }
+        runCatching { todoLocalDataSource.fetchBy(id).first() }
     }
 
     override suspend fun addNew(item: TodoItem) = withErrorHandler {
