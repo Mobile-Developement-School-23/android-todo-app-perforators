@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.util.Date
 
 class TodoListViewModel(
     private val repository: TodoItemsRepository
@@ -45,8 +46,10 @@ class TodoListViewModel(
     }
 
     fun toggleDone(item: TodoItem) = viewModelScope.launch {
-        repository.edit(item.copy(isDone = item.isDone.not()))
-            .onFailure { _events.send(Event.ShowError(it.message.toString())) }
+        val currentDate = Date(System.currentTimeMillis())
+        repository.edit(
+            item.copy(isDone = item.isDone.not(), changeData = currentDate)
+        ).onFailure { _events.send(Event.ShowError(it.message.toString())) }
     }
 
     fun removeItemBy(index: Int) = viewModelScope.launch {
