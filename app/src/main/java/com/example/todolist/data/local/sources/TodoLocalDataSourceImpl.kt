@@ -7,6 +7,7 @@ import com.example.todolist.data.local.mappers.LocalTodoMapper
 import com.example.todolist.data.synchronizer.SyncItem
 import com.example.todolist.domain.models.TodoItem
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class TodoLocalDataSourceImpl @Inject constructor(
@@ -16,7 +17,9 @@ class TodoLocalDataSourceImpl @Inject constructor(
 ) : TodoLocalDataSource {
 
     override fun observeAll(): Flow<List<TodoItem>> {
-        return todoMapper.mapEntitiesFlow(todoDao.observeAll())
+        return todoMapper.mapEntitiesFlow(
+            todoDao.observeAll().map { entities -> entities.filter { it.syncStatus != SyncStatus.DELETED } }
+        )
     }
 
     override suspend fun fetchAll(): List<SyncItem> {

@@ -6,8 +6,10 @@
     <string name="deadline">Сделать до</string>
     <string name="delete">Удалить</string>
     <string name="title">Мои дела</string>
+    <string name="not_actual_title">Мои дела (неактуальные)</string>
     <string name="completed_title">Выполнено — </string>
     <string name="todo">Дело</string>
+    <string name="empty_list">Список пуст</string>
     <string-array name="importances">
         <item>Низкая</item>
         <item>Нет</item>

@@ -31,10 +31,7 @@ class DetailViewModel(
         viewModelScope.launch {
             repository.fetchOne(itemId)
                 .onSuccess { _item.value = it }
-                .onFailure {
-                    _events.send(Event.ShowError(it.message.toString()))
-                    _events.send(Event.GoBack)
-                }
+                .onFailure { _events.send(Event.ShowError(it.message.toString())) }
         }
     }
 

@@ -41,4 +41,5 @@ ext {
     serializationConverterVersion = '0.8.0'
     daggerVersion = '2.41'
     dataStoreVersion = '1.0.0'
+    workManagerVersion = '2.8.1'
 }

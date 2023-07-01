@@ -20,6 +20,7 @@ import com.example.todolist.domain.models.TodoItem
 import com.example.todolist.domain.models.importanceFrom
 import com.example.todolist.utils.convertToDate
 import com.example.todolist.utils.convertToString
+import com.example.todolist.utils.showToast
 import kotlinx.coroutines.launch
 import java.util.Calendar
 import javax.inject.Inject
@@ -100,6 +101,7 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
         when (event) {
             is DetailViewModel.Event.GoBack -> findNavController().navigateUp()
             is DetailViewModel.Event.ShowDatePicker -> showDatePicker()
+            is DetailViewModel.Event.ShowError -> showToast(event.text)
         }
     }
 

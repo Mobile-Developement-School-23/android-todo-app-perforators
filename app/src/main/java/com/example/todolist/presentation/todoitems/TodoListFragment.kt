@@ -3,6 +3,7 @@ package com.example.todolist.presentation.todoitems
 import android.content.Context
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -17,6 +18,7 @@ import com.example.todolist.R
 import com.example.todolist.appComponent
 import com.example.todolist.databinding.FragmentTodoitemsBinding
 import com.example.todolist.di.todoitems.DaggerTodoItemsScreenComponent
+import com.example.todolist.utils.showToast
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -39,6 +41,7 @@ class TodoListFragment : Fragment(R.layout.fragment_todoitems) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initRecycler()
+        initSwipeRefresh()
         binding.showAll.setOnClickListener {
             viewModel.toggleShowingItems()
         }
@@ -54,6 +57,12 @@ class TodoListFragment : Fragment(R.layout.fragment_todoitems) {
             viewModel.events
                 .flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.STARTED)
                 .collect(::handle)
+        }
+    }
+
+    private fun initSwipeRefresh() {
+        binding.swipeLayout.setOnRefreshListener {
+            viewModel.loadAll()
         }
     }
 
@@ -81,8 +90,13 @@ class TodoListFragment : Fragment(R.layout.fragment_todoitems) {
     }
 
     private fun render(state: TodoListViewModel.ScreenState) {
+        binding.items.isVisible = state.items.isNotEmpty()
         adapter.submitItems(state.items)
+        binding.emptyList.isVisible = state.items.isEmpty()
         binding.countCompleted.text = state.countCompleted.toString()
+        binding.mainTitle.text = requireContext().getText(
+            if (state.areActual) R.string.title else R.string.not_actual_title
+        )
         if (state.areShownAllElements) {
             binding.showAll.setImageResource(R.drawable.visibility_off)
         } else {
@@ -102,6 +116,9 @@ class TodoListFragment : Fragment(R.layout.fragment_todoitems) {
                     TodoListFragmentDirections.actionTodoListFragmentToDetailFragment(event.itemId)
                 )
             }
+            is TodoListViewModel.Event.ShowError -> showToast(event.text)
+            is TodoListViewModel.Event.HideRefreshProgressBar ->
+                binding.swipeLayout.isRefreshing = false
         }
     }
 }

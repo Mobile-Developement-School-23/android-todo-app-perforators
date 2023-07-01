@@ -1,6 +1,7 @@
 package com.example.todolist.di.application
 
 import android.content.Context
+import com.example.todolist.App
 import com.example.todolist.di.application.modules.CoreModule
 import com.example.todolist.di.application.modules.NetworkModule
 import com.example.todolist.di.application.modules.PersistenceModule
@@ -19,6 +20,8 @@ import javax.inject.Singleton
     CoreModule::class
 ])
 interface ApplicationComponent : DetailScreenDependencies, TodoItemsScreenDependencies {
+
+    fun inject(application: App)
 
     @Component.Factory
     interface Factory {

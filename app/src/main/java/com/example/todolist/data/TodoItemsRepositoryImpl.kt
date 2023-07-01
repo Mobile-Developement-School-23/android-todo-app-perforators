@@ -1,9 +1,10 @@
 package com.example.todolist.data
 
-import com.example.todolist.data.local.sources.TodoLocalDataSource
+import com.example.todolist.data.connectivityobserver.ConnectivityObserver
 import com.example.todolist.data.local.database.SyncStatus
 import com.example.todolist.data.local.sources.DeviceIdLocalDataSource
 import com.example.todolist.data.local.sources.RevisionLocalDataSource
+import com.example.todolist.data.local.sources.TodoLocalDataSource
 import com.example.todolist.data.remote.NetworkResult
 import com.example.todolist.data.remote.RevisionData
 import com.example.todolist.data.remote.TodoRemoteDataSource
@@ -21,16 +22,18 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class TodoItemsRepositoryImpl @Inject constructor(
     private val todoRemoteDataSource: TodoRemoteDataSource,
     private val todoLocalDataSource: TodoLocalDataSource,
-    private val dispatcher: CoroutineDispatcher,
-    private val synchronizer: Synchronizer,
     private val revisionLocalDataSource: RevisionLocalDataSource,
     deviceIdLocalDataSource: DeviceIdLocalDataSource,
+    private val dispatcher: CoroutineDispatcher,
+    private val synchronizer: Synchronizer,
+    private val connectivityObserver: ConnectivityObserver
 ) : TodoItemsRepository {
 
     private val areSynchronized = MutableStateFlow(false)
@@ -41,6 +44,14 @@ class TodoItemsRepositoryImpl @Inject constructor(
 
     private val revision = revisionLocalDataSource.revision
         .stateIn(scope, SharingStarted.Eagerly, -1)
+
+    init {
+        scope.launch {
+            connectivityObserver.observe().collect {
+                if (it == ConnectivityObserver.Status.Available) fetchAll()
+            }
+        }
+    }
 
     override fun observeAll() = todoLocalDataSource.observeAll().combine(areSynchronized, ::Items)
 
@@ -69,13 +80,17 @@ class TodoItemsRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun fetchOne(id: String) = withErrorHandler {
-        repeatOnError(COUNT_REPEAT, REPEAT_DELAY) {
-            todoRemoteDataSource.fetchOne(id)
-        }.onSuccess {
-            if (it.revision != revision.value) fetchAll()
+    override suspend fun fetchOne(id: String): Result<TodoItem> {
+        try {
+            repeatOnError(COUNT_REPEAT, REPEAT_DELAY) {
+                todoRemoteDataSource.fetchOne(id)
+            }.onSuccess {
+                if (it.revision != revision.value) fetchAll()
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
-        runCatching { todoLocalDataSource.fetchBy(id).first() }
+        return runCatching { todoLocalDataSource.fetchBy(id).first() }
     }
 
     override suspend fun addNew(item: TodoItem) = withErrorHandler {
@@ -91,12 +106,13 @@ class TodoItemsRepositoryImpl @Inject constructor(
     }
 
     override suspend fun edit(item: TodoItem) = withErrorHandler {
+        val newItem = item.copy(lastUpdatedBy = deviceId.value)
         changeItem(
             onChange = {
-                todoLocalDataSource.insertOne(item, SyncStatus.EDITED)
-                todoRemoteDataSource.edit(revision.value, item)
+                todoLocalDataSource.insertOne(newItem, SyncStatus.EDITED)
+                todoRemoteDataSource.edit(revision.value, newItem)
             },
-            onSuccess = { todoLocalDataSource.insertOne(item, SyncStatus.SYNCHRONIZED) },
+            onSuccess = { todoLocalDataSource.insertOne(newItem, SyncStatus.SYNCHRONIZED) },
             errorMessage = EDIT_TODO_ERROR
         )
     }
@@ -141,6 +157,6 @@ class TodoItemsRepositoryImpl @Inject constructor(
         private const val ADD_NEW_TODO_ERROR = "Не удалось добавить новое дело на сервер"
         private const val REMOVE_TODO_ERROR = "Не удалось удалить дело с сервера"
         private const val EDIT_TODO_ERROR = "Не удалось обновить дела на сервере"
-        private const val COMMON_TODO_ERROR = "Произошла ошибка при загрузке/получении данныхю"
+        private const val COMMON_TODO_ERROR = "Произошла ошибка при загрузке/получении данных"
     }
 }

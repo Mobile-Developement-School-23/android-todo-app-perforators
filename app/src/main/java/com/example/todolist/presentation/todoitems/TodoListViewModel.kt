@@ -41,6 +41,7 @@ class TodoListViewModel(
     fun loadAll() = viewModelScope.launch {
         repository.fetchAll()
             .onFailure { _events.send(Event.ShowError(it.message.toString())) }
+        _events.send(Event.HideRefreshProgressBar)
     }
 
     fun toggleDone(item: TodoItem) = viewModelScope.launch {
@@ -80,6 +81,7 @@ class TodoListViewModel(
 
     sealed interface Event {
         object CreateNewTodoItem : Event
+        object HideRefreshProgressBar : Event
         data class ShowError(val text: String) : Event
         data class EditTodoItem(val itemId: String) : Event
     }
