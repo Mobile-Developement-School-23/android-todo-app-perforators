@@ -6,6 +6,7 @@ import com.example.todolist.di.application.modules.CoreModule
 import com.example.todolist.di.application.modules.NetworkModule
 import com.example.todolist.di.application.modules.PersistenceModule
 import com.example.todolist.di.application.modules.RepositoryModule
+import com.example.todolist.di.authentication.AuthorizationScreenDependencies
 import com.example.todolist.di.detail.DetailScreenDependencies
 import com.example.todolist.di.todoitems.TodoItemsScreenDependencies
 import dagger.BindsInstance
@@ -19,7 +20,8 @@ import javax.inject.Singleton
     RepositoryModule::class,
     CoreModule::class
 ])
-interface ApplicationComponent : DetailScreenDependencies, TodoItemsScreenDependencies {
+interface ApplicationComponent
+    : DetailScreenDependencies, TodoItemsScreenDependencies, AuthorizationScreenDependencies {
 
     fun inject(application: App)
 

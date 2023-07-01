@@ -42,4 +42,5 @@ ext {
     daggerVersion = '2.41'
     dataStoreVersion = '1.0.0'
     workManagerVersion = '2.8.1'
+    yandexAuthVersion = '2.5.1'
 }

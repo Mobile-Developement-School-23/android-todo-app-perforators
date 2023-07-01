@@ -4,7 +4,7 @@ import com.example.todolist.data.local.database.SyncStatus
 import com.example.todolist.data.local.database.TodoDao
 import com.example.todolist.data.local.mappers.SyncTodoMapper
 import com.example.todolist.data.local.mappers.LocalTodoMapper
-import com.example.todolist.data.synchronizer.SyncItem
+import com.example.todolist.data.repositories.synchronizer.SyncItem
 import com.example.todolist.domain.models.TodoItem
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map

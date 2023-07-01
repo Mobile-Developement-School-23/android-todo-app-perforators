@@ -1,4 +1,4 @@
-package com.example.todolist.data
+package com.example.todolist.data.repositories
 
 import com.example.todolist.data.connectivityobserver.ConnectivityObserver
 import com.example.todolist.data.local.database.SyncStatus
@@ -12,7 +12,7 @@ import com.example.todolist.data.remote.onError
 import com.example.todolist.data.remote.onSuccess
 import com.example.todolist.data.remote.repeatOnError
 import com.example.todolist.data.remote.toResult
-import com.example.todolist.data.synchronizer.Synchronizer
+import com.example.todolist.data.repositories.synchronizer.Synchronizer
 import com.example.todolist.domain.TodoItemsRepository
 import com.example.todolist.domain.models.Items
 import com.example.todolist.domain.models.TodoItem

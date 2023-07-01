@@ -1,7 +1,7 @@
 package com.example.todolist.data.local.mappers
 
 import com.example.todolist.data.local.database.TodoEntity
-import com.example.todolist.data.synchronizer.SyncItem
+import com.example.todolist.data.repositories.synchronizer.SyncItem
 import javax.inject.Inject
 
 class SyncTodoMapper @Inject constructor(

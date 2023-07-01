@@ -1,7 +1,7 @@
 package com.example.todolist.data.local.sources
 
 import com.example.todolist.data.local.database.SyncStatus
-import com.example.todolist.data.synchronizer.SyncItem
+import com.example.todolist.data.repositories.synchronizer.SyncItem
 import com.example.todolist.domain.models.TodoItem
 import kotlinx.coroutines.flow.Flow
 

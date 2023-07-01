@@ -2,7 +2,7 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/navigation"
-    app:startDestination="@id/todoListFragment">
+    app:startDestination="@id/authorizationFragment">
 
     <fragment
         android:id="@+id/todoListFragment"
@@ -19,5 +19,15 @@
         <argument
             android:name="itemId"
             app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/authorizationFragment"
+        android:name="com.example.todolist.presentation.authorization.AuthorizationFragment"
+        android:label="AuthorizationFragment" >
+        <action
+            android:id="@+id/action_authorizationFragment_to_todoListFragment"
+            app:destination="@id/todoListFragment"
+            app:popUpTo="@id/authorizationFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 </navigation>

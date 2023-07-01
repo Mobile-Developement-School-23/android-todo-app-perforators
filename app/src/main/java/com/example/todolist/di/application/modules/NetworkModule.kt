@@ -1,5 +1,6 @@
 package com.example.todolist.di.application.modules
 
+import com.example.todolist.data.local.sources.TokenLocalDataSource
 import com.example.todolist.data.remote.api.HeaderInterceptor
 import com.example.todolist.data.remote.api.TodoApi
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
@@ -65,13 +66,12 @@ class NetworkModule {
     }
 
     @Provides
-    fun provideHeaderInterceptor(): HeaderInterceptor {
-        return HeaderInterceptor(API_KEY)
+    fun provideHeaderInterceptor(tokenLocalDataSource: TokenLocalDataSource): HeaderInterceptor {
+        return HeaderInterceptor(tokenLocalDataSource)
     }
 
     companion object {
 
-        private const val API_KEY = "overshelving"
         private const val BASE_URL = "https://beta.mrdekk.ru/todobackend/"
         private const val CONTENT_TYPE = "application/json"
     }

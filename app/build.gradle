@@ -16,6 +16,7 @@ android {
         targetSdk targetSdkVers
         versionCode 1
         versionName "1.0"
+        manifestPlaceholders = [YANDEX_CLIENT_ID:"0d0970774e284fa8ba9ff70b6b06479a"]
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -78,7 +79,10 @@ dependencies {
     implementation "androidx.datastore:datastore-preferences:$dataStoreVersion"
 
     // WorkManager
-    implementation("androidx.work:work-runtime-ktx:$workManagerVersion")
+    implementation "androidx.work:work-runtime-ktx:$workManagerVersion"
+
+    // Yandex Auth
+    implementation "com.yandex.android:authsdk:$yandexAuthVersion"
 
     // Retrofit
     implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
