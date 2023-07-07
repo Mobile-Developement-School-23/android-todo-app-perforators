@@ -1,17 +1,18 @@
 package com.example.todolist
 
 import android.app.Application
-import androidx.fragment.app.Fragment
 import androidx.work.Configuration
 import androidx.work.Constraints
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkManager
-import com.example.todolist.data.worker.SynchronizedWorker
-import com.example.todolist.data.worker.SynchronizedWorkerFactory
-import com.example.todolist.di.application.ApplicationComponent
-import com.example.todolist.di.application.DaggerApplicationComponent
+import com.example.authorization.di.AuthorizationDepsStore
+import com.example.data.worker.SynchronizedWorkerFactory
+import com.example.edittodo.di.DetailDepsStore
+import com.example.todolist.di.ApplicationComponent
+import com.example.todolist.di.DaggerApplicationComponent
+import com.example.todolist.di.TodoItemsDepsStore
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -25,9 +26,16 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
         applicationComponent = DaggerApplicationComponent.factory().create(this)
+        initDependencies()
         applicationComponent.inject(this)
         configureWorkManager()
         configurePeriodicSynchronization()
+    }
+
+    private fun initDependencies() {
+        AuthorizationDepsStore.deps = applicationComponent
+        DetailDepsStore.deps = applicationComponent
+        TodoItemsDepsStore.deps = applicationComponent
     }
 
     private fun configureWorkManager() {
@@ -39,7 +47,7 @@ class App : Application() {
 
     private fun configurePeriodicSynchronization() {
         val periodicWorkRequest = PeriodicWorkRequest.Builder(
-            SynchronizedWorker::class.java, REPEAT_INTERVAL, TimeUnit.HOURS
+            com.example.data.worker.SynchronizedWorker::class.java, REPEAT_INTERVAL, TimeUnit.HOURS
         ).setConstraints(
             Constraints.Builder()
                 .setRequiredNetworkType(NetworkType.CONNECTED)
@@ -56,5 +64,3 @@ class App : Application() {
         private const val REPEAT_INTERVAL = 8L
     }
 }
-
-fun Fragment.appComponent() = (requireActivity().application as App).applicationComponent
