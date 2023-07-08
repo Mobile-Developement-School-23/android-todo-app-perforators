@@ -12,7 +12,6 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.example.navigation.navigate
 import com.example.todolist.databinding.FragmentTodoitemsBinding
@@ -42,12 +41,11 @@ class TodoListFragment : Fragment(R.layout.fragment_todoitems) {
         super.onViewCreated(view, savedInstanceState)
         initRecycler()
         initSwipeRefresh()
-        binding.showAll.setOnClickListener {
-            viewModel.toggleShowingItems()
-        }
-        binding.addItem.setOnClickListener {
-            viewModel.createNewTodoItem()
-        }
+        setupListeners()
+        setupObservers()
+    }
+
+    private fun setupObservers() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.state
                 .flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.STARTED)
@@ -60,6 +58,15 @@ class TodoListFragment : Fragment(R.layout.fragment_todoitems) {
         }
     }
 
+    private fun setupListeners() {
+        binding.showAll.setOnClickListener {
+            viewModel.toggleShowingItems()
+        }
+        binding.addItem.setOnClickListener {
+            viewModel.createNewTodoItem()
+        }
+    }
+
     private fun initSwipeRefresh() {
         binding.swipeLayout.setOnRefreshListener {
             viewModel.loadAll()
@@ -67,20 +74,8 @@ class TodoListFragment : Fragment(R.layout.fragment_todoitems) {
     }
 
     private fun initRecycler() {
-        ItemTouchHelper(
-            object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
-                override fun onMove(
-                    recyclerView: RecyclerView,
-                    viewHolder: RecyclerView.ViewHolder,
-                    target: RecyclerView.ViewHolder
-                ) = true
-
-                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, swipeDir: Int) {
-                    val position = viewHolder.bindingAdapterPosition
-                    viewModel.removeItemBy(position)
-                }
-            }
-        ).attachToRecyclerView(binding.items)
+        val swipeCallback = SwipeCallback(viewModel::removeItemBy)
+        ItemTouchHelper(swipeCallback).attachToRecyclerView(binding.items)
         adapter = TodoListAdapter(
             onItemClick = viewModel::edit,
             onToggleClick = viewModel::toggleDone

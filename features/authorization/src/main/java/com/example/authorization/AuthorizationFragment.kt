@@ -35,15 +35,10 @@ class AuthorizationFragment : Fragment(R.layout.fragment_authorization) {
             if (it.resultCode == RESULT_LOGIN_SDK) handleToken(it.resultCode, it.data)
         }
 
-    private fun handleToken(resultCode: Int, data: Intent?) {
-        try {
-            yandexSdk.extractToken(resultCode, data)?.let {
-                viewModel.addYandexToken(it.value)
-            }
-        } catch (e: YandexAuthException) {
-            showToast(requireContext().getString(R.string.not_authorized))
-        }
-    }
+    private val binding: FragmentAuthorizationBinding by viewBinding(
+        FragmentAuthorizationBinding::bind
+    )
+    private val viewModel: AuthorizationViewModel by viewModels { factory }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -51,11 +46,6 @@ class AuthorizationFragment : Fragment(R.layout.fragment_authorization) {
             .create(AuthorizationDepsStore.deps)
             .inject(this)
     }
-
-    private val binding: FragmentAuthorizationBinding by viewBinding(
-        FragmentAuthorizationBinding::bind
-    )
-    private val viewModel: AuthorizationViewModel by viewModels { factory }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -83,6 +73,16 @@ class AuthorizationFragment : Fragment(R.layout.fragment_authorization) {
     private fun handle(event: AuthorizationViewModel.Event) {
         when (event) {
             is AuthorizationViewModel.Event.ShowAllTodoItems -> navigate(event.command)
+        }
+    }
+
+    private fun handleToken(resultCode: Int, data: Intent?) {
+        try {
+            yandexSdk.extractToken(resultCode, data)?.let {
+                viewModel.addYandexToken(it.value)
+            }
+        } catch (e: YandexAuthException) {
+            showToast(requireContext().getString(R.string.not_authorized))
         }
     }
 

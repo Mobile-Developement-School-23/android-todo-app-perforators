@@ -17,33 +17,33 @@ import retrofit2.http.Path
 interface TodoApi {
 
    @GET("list")
-   suspend fun fetchTodoList(): Response<TodoListResponse>
+   suspend fun fetchTodoList(): TodoListResponse
 
    @GET("list/{id}")
-   suspend fun fetchOne(@Path("id") id: String): Response<OneItemResponse>
+   suspend fun fetchOne(@Path("id") id: String): OneItemResponse
 
    @PATCH("list")
    suspend fun updateList(
       @Header("X-Last-Known-Revision") revision: Int,
       @Body updateTodoListRequest: UpdateTodoListRequest
-   ): Response<TodoListResponse>
+   ): TodoListResponse
 
    @POST("list")
    suspend fun addNewTodo(
       @Header("X-Last-Known-Revision") revision: Int,
       @Body saveNewTodoRequest: SaveNewTodoRequest
-   ): Response<OneItemResponse>
+   ): OneItemResponse
 
    @PUT("list/{id}")
    suspend fun editTodo(
       @Header("X-Last-Known-Revision") revision: Int,
       @Path("id") id: String,
       @Body saveNewTodoRequest: SaveNewTodoRequest
-   ): Response<OneItemResponse>
+   ): OneItemResponse
 
    @DELETE("list/{id}")
    suspend fun delete(
       @Header("X-Last-Known-Revision") revision: Int,
       @Path("id") id: String
-   ): Response<OneItemResponse>
+   ): OneItemResponse
 }

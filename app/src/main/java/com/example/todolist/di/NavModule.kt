@@ -1,29 +1,22 @@
 package com.example.todolist.di
 
 import com.example.authorization.navigation.AuthorizationNavCommandProvider
-import com.example.navigation.NavCommand
+import com.example.todolist.navigation.AuthorizationNavCommandProviderImpl
 import com.example.todolist.navigation.TodoListNavCommandProvider
+import com.example.todolist.navigation.TodoListNavCommandProviderImpl
+import dagger.Binds
 import dagger.Module
-import dagger.Provides
 
 @Module
-class NavModule {
+interface NavModule {
 
-    @Provides
-    fun provideAuthorizationNavProvider(): AuthorizationNavCommandProvider {
-        return object : AuthorizationNavCommandProvider {
-            override fun navigateToTodoList(): NavCommand {
-                return NavCommand(com.example.app.R.id.action_authorizationFragment_to_todoListFragment)
-            }
-        }
-    }
+    @Binds
+    fun bindAuthorizationNavProvider(
+        impl: AuthorizationNavCommandProviderImpl
+    ): AuthorizationNavCommandProvider
 
-    @Provides
-    fun provideTodoListNavProvider(): TodoListNavCommandProvider {
-        return object : TodoListNavCommandProvider {
-            override fun navigateToEditScreen(): NavCommand {
-                return NavCommand(com.example.app.R.id.action_todoListFragment_to_detailFragment)
-            }
-        }
-    }
+    @Binds
+    fun bindTodoListNavProvider(
+        impl: TodoListNavCommandProviderImpl
+    ): TodoListNavCommandProvider
 }

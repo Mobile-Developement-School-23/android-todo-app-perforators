@@ -1,4 +1,4 @@
-package com.example.data.connectivityobserver
+package com.example.data.workers.network.connectivityobserver
 
 import kotlinx.coroutines.flow.Flow
 

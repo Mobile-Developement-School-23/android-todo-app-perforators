@@ -45,9 +45,13 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        setupListeners()
+        setupDeleteLayout()
+        setupObservers()
         viewModel.loadItem(itemId)
+    }
 
+    private fun setupListeners() {
         binding.cancel.setOnClickListener {
             viewModel.cancel()
         }
@@ -62,7 +66,9 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
                 deadline = if (date.isNotEmpty()) date.convertToDate() else null
             )
         }
+    }
 
+    private fun setupDeleteLayout() {
         if (itemId.isEmpty()) {
             binding.delete.setImageResource(R.drawable.delete_disable)
             binding.deleteText.setTextColor(requireContext().getColor(
@@ -77,7 +83,9 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
                 viewModel.delete()
             }
         }
+    }
 
+    private fun setupObservers() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.item
                 .flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.STARTED)
@@ -114,14 +122,13 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
         val day: Int = calendar.get(Calendar.DAY_OF_MONTH)
         val month: Int = calendar.get(Calendar.MONTH)
         val year: Int = calendar.get(Calendar.YEAR)
-        val picker = DatePickerDialog(
+        DatePickerDialog(
             requireContext(),
             { _, currentYear, monthOfYear, dayOfMonth ->
                 binding.date.visibility = View.VISIBLE
                 binding.date.text = convertToString(dayOfMonth, monthOfYear, currentYear)
             }, year, month, day
-        )
-        picker.show()
+        ).show()
     }
 
     companion object {

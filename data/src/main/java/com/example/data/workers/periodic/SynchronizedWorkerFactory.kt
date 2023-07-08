@@ -1,4 +1,4 @@
-package com.example.data.worker
+package com.example.data.workers.periodic
 
 import android.content.Context
 import androidx.work.ListenableWorker

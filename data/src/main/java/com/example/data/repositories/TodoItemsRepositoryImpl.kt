@@ -1,17 +1,11 @@
 package com.example.data.repositories
 
-import com.example.data.connectivityobserver.ConnectivityObserver
 import com.example.data.local.SyncStatus
 import com.example.data.local.sources.DeviceIdLocalDataSource
 import com.example.data.local.sources.RevisionLocalDataSource
 import com.example.data.local.sources.TodoLocalDataSource
-import com.example.data.remote.NetworkResult
 import com.example.data.remote.RevisionData
 import com.example.data.remote.TodoRemoteDataSource
-import com.example.data.remote.onError
-import com.example.data.remote.onSuccess
-import com.example.data.remote.repeatOnError
-import com.example.data.remote.toResult
 import com.example.data.repositories.synchronizer.Synchronizer
 import com.example.domain.TodoItemsRepository
 import com.example.domain.models.Items
@@ -22,7 +16,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
@@ -32,8 +25,7 @@ class TodoItemsRepositoryImpl @Inject constructor(
     private val revisionLocalDataSource: RevisionLocalDataSource,
     deviceIdLocalDataSource: DeviceIdLocalDataSource,
     private val dispatcher: CoroutineDispatcher,
-    private val synchronizer: Synchronizer,
-    private val connectivityObserver: ConnectivityObserver
+    private val synchronizer: Synchronizer
 ) : TodoItemsRepository {
 
     private val areSynchronized = MutableStateFlow(false)
@@ -45,90 +37,69 @@ class TodoItemsRepositoryImpl @Inject constructor(
     private val revision = revisionLocalDataSource.revision
         .stateIn(scope, SharingStarted.Eagerly, -1)
 
-    init {
-        scope.launch {
-            connectivityObserver.observe().collect {
-                if (it == ConnectivityObserver.Status.Available) fetchAll()
-            }
-        }
-    }
-
     override fun observeAll() = todoLocalDataSource.observeAll().combine(areSynchronized, ::Items)
 
     override suspend fun fetchAll() = withErrorHandler {
-        repeatOnError(
-            COUNT_REPEAT,
-            REPEAT_DELAY,
-            todoRemoteDataSource::fetchTodoList
-        )
+        todoRemoteDataSource.fetchTodoList()
             .onSuccess {
                 val localItems = todoLocalDataSource.fetchAll()
                 val newItems = synchronizer.sync(it.data, localItems)
                 syncData(newItems)
             }
-            .onError {
+            .onFailure {
                 areSynchronized.value = false
             }
         Result.success(Unit)
     }
 
     private suspend fun syncData(newItems: List<TodoItem>) {
-        repeatOnError(COUNT_REPEAT, REPEAT_DELAY) {
-            todoRemoteDataSource.updateTodoList(newItems, revision.value)
-        }.onSuccess {
-            todoLocalDataSource.replaceAll(it.data)
-            revisionLocalDataSource.change(it.revision)
-            areSynchronized.value = true
-        }.onError {
-            areSynchronized.value = false
-        }
+        todoRemoteDataSource.updateTodoList(newItems, revision.value)
+            .onSuccess {
+                todoLocalDataSource.replaceAll(it.data)
+                revisionLocalDataSource.change(it.revision)
+                areSynchronized.value = true
+            }.onFailure {
+                areSynchronized.value = false
+            }
     }
 
-    override suspend fun fetchOne(id: String) = withContext(dispatcher) {
-        try {
-            repeatOnError(COUNT_REPEAT, REPEAT_DELAY) {
-                todoRemoteDataSource.fetchOne(id)
-            }.onSuccess {
+    override suspend fun fetchOne(id: String) = withErrorHandler {
+        todoRemoteDataSource.fetchOne(id)
+            .onSuccess {
                 if (it.revision != revision.value) fetchAll()
             }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
         runCatching { todoLocalDataSource.fetchBy(id).first() }
     }
 
     override suspend fun addNew(item: TodoItem) = withErrorHandler {
         val newItem = item.copy(lastUpdatedBy = deviceId.value)
         changeItem(
-            onChange = {
+            block = {
                 todoLocalDataSource.insertOne(newItem, SyncStatus.ADDED)
                 todoRemoteDataSource.addNew(revision.value, newItem)
             },
-            onSuccess = { todoLocalDataSource.insertOne(newItem, SyncStatus.SYNCHRONIZED) },
-            errorMessage = ADD_NEW_TODO_ERROR
+            onSuccess = { todoLocalDataSource.insertOne(newItem, SyncStatus.SYNCHRONIZED) }
         )
     }
 
     override suspend fun edit(item: TodoItem) = withErrorHandler {
         val newItem = item.copy(lastUpdatedBy = deviceId.value)
         changeItem(
-            onChange = {
+            block = {
                 todoLocalDataSource.insertOne(newItem, SyncStatus.EDITED)
                 todoRemoteDataSource.edit(revision.value, newItem)
             },
-            onSuccess = { todoLocalDataSource.insertOne(newItem, SyncStatus.SYNCHRONIZED) },
-            errorMessage = EDIT_TODO_ERROR
+            onSuccess = { todoLocalDataSource.insertOne(newItem, SyncStatus.SYNCHRONIZED) }
         )
     }
 
     override suspend fun remove(item: TodoItem) = withErrorHandler {
         changeItem(
-            onChange = {
+            block = {
                 todoLocalDataSource.insertOne(item, SyncStatus.DELETED)
                 todoRemoteDataSource.delete(revision.value, item.id)
             },
-            onSuccess = { todoLocalDataSource.delete(item.id) },
-            errorMessage = REMOVE_TODO_ERROR
+            onSuccess = { todoLocalDataSource.delete(item.id) }
         )
     }
 
@@ -137,30 +108,19 @@ class TodoItemsRepositoryImpl @Inject constructor(
             try {
                 block()
             } catch (e: Exception) {
-                Result.failure(IllegalStateException(COMMON_TODO_ERROR))
+                Result.failure(e)
             }
         }
 
     private suspend fun changeItem(
-        onChange: suspend () -> NetworkResult<RevisionData<TodoItem>>,
-        onSuccess: suspend () -> Unit,
-        errorMessage: String
+        block: suspend () -> Result<RevisionData<TodoItem>>,
+        onSuccess: suspend () -> Unit
     ): Result<TodoItem> {
-        return repeatOnError(COUNT_REPEAT, REPEAT_DELAY, onChange)
+        return block()
             .onSuccess {
                 onSuccess()
                 revisionLocalDataSource.change(it.revision)
             }
-            .toResult(errorMessage)
             .map { it.data }
-    }
-
-    companion object {
-        private const val COUNT_REPEAT = 3
-        private const val REPEAT_DELAY = 500L
-        private const val ADD_NEW_TODO_ERROR = "Не удалось добавить новое дело на сервер"
-        private const val REMOVE_TODO_ERROR = "Не удалось удалить дело с сервера"
-        private const val EDIT_TODO_ERROR = "Не удалось обновить дела на сервере"
-        private const val COMMON_TODO_ERROR = "Произошла ошибка при загрузке/получении данных"
     }
 }
