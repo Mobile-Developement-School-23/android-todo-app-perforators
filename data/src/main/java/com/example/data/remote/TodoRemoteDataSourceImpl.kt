@@ -69,7 +69,7 @@ class TodoRemoteDataSourceImpl @Inject constructor(
         errorMessage: String,
         block: suspend () -> T
     ): Result<T> {
-        for (i in 1..COUNT_REPEAT) {
+        repeat(COUNT_REPEAT) {
             val result = kotlin.runCatching { block() }
             if (result.isSuccess) return result
             delay(REPEAT_DELAY)
@@ -79,7 +79,7 @@ class TodoRemoteDataSourceImpl @Inject constructor(
 
     companion object {
         private const val COUNT_REPEAT = 3
-        private const val REPEAT_DELAY = 500L
+        private const val REPEAT_DELAY = 300L
         private const val ADD_NEW_TODO_ERROR = "Не удалось добавить новое дело на сервер"
         private const val REMOVE_TODO_ERROR = "Не удалось удалить дело с сервера"
         private const val EDIT_TODO_ERROR = "Не удалось обновить дела на сервере"
