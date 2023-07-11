@@ -11,6 +11,113 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
     }
+    versionCatalogs {
+        create("corelibs") {
+            version("androidXFragment", "1.2.5")
+            version("androidXCore", "1.10.1")
+            version("androidXAppCompat", "1.6.1")
+            version("androidXConstraint", "2.1.4")
+            version("material", "1.9.0")
+            version("androidXSwipeRefresh", "1.1.0")
+            library("androidx-fragment", "androidx.fragment", "fragment-ktx")
+                    .versionRef("androidXFragment")
+            library("androidx-core", "androidx.core", "core-ktx")
+                    .versionRef("androidXCore")
+            library("androidx-appcompat", "androidx.appcompat", "appcompat")
+                    .versionRef("androidXAppCompat")
+            library("material", "com.google.android.material", "material")
+                    .versionRef("material")
+            library("androidx-constraintlayout", "androidx.constraintlayout", "constraintlayout")
+                    .versionRef("androidXConstraint")
+            library("androidx-swiperefreshlayout", "androidx.swiperefreshlayout", "swiperefreshlayout")
+                    .versionRef("androidXSwipeRefresh")
+            bundle("core", ["androidx-core", "androidx-appcompat", "material",
+                    "androidx-constraintlayout", "androidx-swiperefreshlayout", "androidx-fragment"])
+        }
+
+        create("libs") {
+            // Navigation
+            version("navigation", "2.6.0")
+            library("navigation-fragment", "androidx.navigation", "navigation-fragment-ktx")
+                    .versionRef("navigation")
+            library("navigation-ui", "androidx.navigation", "navigation-ui-ktx")
+                    .versionRef("navigation")
+            bundle("navigation", ["navigation-fragment", "navigation-ui"])
+
+            // Binding
+            version("binding", "1.5.6")
+            library("binding", "com.github.kirich1409", "viewbindingpropertydelegate-noreflection")
+                    .versionRef("binding")
+
+            // Coroutines
+            version("coroutines", "1.6.4")
+            library("coroutines-core", "org.jetbrains.kotlinx", "kotlinx-coroutines-core")
+                    .versionRef("coroutines")
+            library("coroutines-android", "org.jetbrains.kotlinx", "kotlinx-coroutines-android")
+                    .versionRef("coroutines")
+            bundle("coroutines", ["coroutines-core", "coroutines-android"])
+
+            // Room
+            version("room", "2.5.2")
+            library("room-runtime", "androidx.room", "room-runtime")
+                    .versionRef("room")
+            library("room-compiler", "androidx.room", "room-compiler")
+                    .versionRef("room")
+            library("room-ktx", "androidx.room", "room-ktx")
+                    .versionRef("room")
+            bundle("room", ["room-runtime", "room-ktx"])
+
+            // Serialization
+            version("serialization", "1.3.2")
+            library("serialization", "org.jetbrains.kotlinx", "kotlinx-serialization-json")
+                    .versionRef("serialization")
+
+            // Dagger 2
+            version("dagger", "2.46.1")
+            library("dagger", "com.google.dagger", "dagger")
+                    .versionRef("dagger")
+            library("dagger-compiler", "com.google.dagger", "dagger-compiler")
+                    .versionRef("dagger")
+
+            // DataStore
+            version("dataStore", "1.0.0")
+            library("datastore", "androidx.datastore", "datastore-preferences")
+                    .versionRef("dataStore")
+
+            // WorkManager
+            version("workManager", "2.8.1")
+            library("workManager", "androidx.work", "work-runtime-ktx")
+                    .versionRef("workManager")
+
+            // Yandex Auth
+            version("yandexAuth", "2.5.1")
+            library("authsdk", "com.yandex.android", "authsdk")
+                    .versionRef("yandexAuth")
+
+            // Retrofit
+            version("retrofit", "2.9.0")
+            version("okHttp", "5.0.0-alpha.2")
+            version("converter", "0.8.0")
+            library("retrofit", "com.squareup.retrofit2", "retrofit")
+                    .versionRef("retrofit")
+            library("okhttp", "com.squareup.okhttp3", "okhttp")
+                    .versionRef("okHttp")
+            library("logging-interceptor", "com.squareup.okhttp3", "logging-interceptor")
+                    .versionRef("okHttp")
+            library("converter", "com.jakewharton.retrofit", "retrofit2-kotlinx-serialization-converter")
+                    .versionRef("converter")
+            bundle("retrofit", ["retrofit", "okhttp", "logging-interceptor", "converter"])
+        }
+    }
 }
 rootProject.name = "TodoList"
 include ':app'
+include ':features:todolist'
+include ':features:edittodo'
+include ':features:authorization'
+include ':data'
+include ':domain'
+include ':core:utils'
+include ':common'
+include ':core:ui'
+include ':core:navigation'

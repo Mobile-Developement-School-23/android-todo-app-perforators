@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="auth_token">Войти по токену</string>
+    <string name="yandex_id">Войти через Яндекс ID</string>
+    <string name="not_authorized">Не удалось авторизоваться через Яндекс ID</string>
+</resources>
