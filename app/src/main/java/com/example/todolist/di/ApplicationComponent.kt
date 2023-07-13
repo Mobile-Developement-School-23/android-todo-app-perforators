@@ -1,9 +1,9 @@
 package com.example.todolist.di
 
 import android.content.Context
+import com.example.authorization.di.AuthorizationFeatureDependencies
 import com.example.todolist.App
-import com.example.authorization.di.AuthorizationScreenDependencies
-import com.example.edittodo.di.DetailScreenDependencies
+import com.example.di.TodoFeatureDependencies
 import com.example.todolist.di.modules.CoreModule
 import com.example.todolist.di.modules.NavModule
 import com.example.todolist.di.modules.NetworkModule
@@ -22,7 +22,7 @@ import javax.inject.Singleton
     NavModule::class
 ])
 interface ApplicationComponent
-    : DetailScreenDependencies, TodoItemsScreenDependencies, AuthorizationScreenDependencies {
+    : TodoFeatureDependencies, AuthorizationFeatureDependencies {
 
     fun inject(application: App)
 

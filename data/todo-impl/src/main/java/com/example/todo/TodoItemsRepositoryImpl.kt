@@ -78,7 +78,7 @@ class TodoItemsRepositoryImpl @Inject constructor(
                 todoLocalDataSource.insertOne(newItem, SyncStatus.ADDED)
                 todoRemoteDataSource.addNew(revision.value, newItem)
             },
-            onSuccess = { todoLocalDataSource.insertOne(newItem, SyncStatus.SYNCHRONIZED) }
+            onSuccess = { todoLocalDataSource.insertOne(it, SyncStatus.SYNCHRONIZED) }
         )
     }
 
@@ -89,7 +89,7 @@ class TodoItemsRepositoryImpl @Inject constructor(
                 todoLocalDataSource.insertOne(newItem, SyncStatus.EDITED)
                 todoRemoteDataSource.edit(revision.value, newItem)
             },
-            onSuccess = { todoLocalDataSource.insertOne(newItem, SyncStatus.SYNCHRONIZED) }
+            onSuccess = { todoLocalDataSource.insertOne(it, SyncStatus.SYNCHRONIZED) }
         )
     }
 
@@ -99,7 +99,7 @@ class TodoItemsRepositoryImpl @Inject constructor(
                 todoLocalDataSource.insertOne(item, SyncStatus.DELETED)
                 todoRemoteDataSource.delete(revision.value, item.id)
             },
-            onSuccess = { todoLocalDataSource.delete(item.id) }
+            onSuccess = { todoLocalDataSource.delete(it.id) }
         )
     }
 
@@ -114,11 +114,11 @@ class TodoItemsRepositoryImpl @Inject constructor(
 
     private suspend fun changeItem(
         block: suspend () -> Result<RevisionData<TodoItem>>,
-        onSuccess: suspend () -> Unit
+        onSuccess: suspend (TodoItem) -> Unit
     ): Result<TodoItem> {
         return block()
             .onSuccess {
-                onSuccess()
+                onSuccess(it.data)
                 revisionLocalDataSource.change(it.revision)
             }
             .map { it.data }

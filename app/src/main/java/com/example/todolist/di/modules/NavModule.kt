@@ -2,8 +2,8 @@ package com.example.todolist.di.modules
 
 import com.example.authorization.navigation.AuthorizationNavCommandProvider
 import com.example.todolist.navigation.AuthorizationNavCommandProviderImpl
-import com.example.todolist.navigation.TodoListNavCommandProvider
-import com.example.todolist.navigation.TodoListNavCommandProviderImpl
+import com.example.todolist.navigation.TodoNavCommandProvider
+import com.example.todolist.navigation.TodoNavCommandProviderImpl
 import dagger.Binds
 import dagger.Module
 
@@ -17,6 +17,6 @@ interface NavModule {
 
     @Binds
     fun bindTodoListNavProvider(
-        impl: TodoListNavCommandProviderImpl
-    ): TodoListNavCommandProvider
+        impl: TodoNavCommandProviderImpl
+    ): TodoNavCommandProvider
 }

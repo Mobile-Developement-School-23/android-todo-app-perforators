@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title">Мои дела</string>
+    <string name="not_actual_title">Мои дела (неактуальные)</string>
+    <string name="todo">Дело</string>
+    <string name="empty_list">Список пуст</string>
+    <string name="completed_title">"Выполнено — "</string>
+    <string name="save">СОХРАНИТЬ</string>
+    <string name="whatTodo">Что надо сделать…</string>
+    <string name="importance">Важность</string>
+    <string name="deadline">Сделать до</string>
+    <string name="delete">Удалить</string>
+    <string-array name="importances">
+        <item>Низкая</item>
+        <item>Нет</item>
+        <item>Высокая</item>
+    </string-array>
+</resources>

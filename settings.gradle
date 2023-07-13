@@ -112,9 +112,9 @@ dependencyResolutionManagement {
 }
 rootProject.name = "TodoList"
 include ':app'
-include ':features:todolist'
-include ':features:edittodo'
+include ':features:todo'
 include ':features:authorization'
+include ':features:settings'
 include ':core:utils'
 include ':core:ui'
 include ':core:navigation'
@@ -123,3 +123,5 @@ include ':data:todo-api'
 include ':data:authorization-impl'
 include ':data:authorization-api'
 include ':common'
+include ':data:settings-api'
+include ':data:settings-impl'

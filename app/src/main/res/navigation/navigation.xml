@@ -13,6 +13,9 @@
             app:destination="@id/detailFragment"
             app:enterAnim="@android:anim/slide_in_left"
             app:popExitAnim="@android:anim/slide_out_right" />
+        <action
+            android:id="@+id/action_todoListFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
     </fragment>
     <fragment
         android:id="@+id/detailFragment"
@@ -32,4 +35,8 @@
             app:popUpTo="@id/authorizationFragment"
             app:popUpToInclusive="true" />
     </fragment>
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.example.settings.SettingsFragment"
+        android:label="SettingsFragment" />
 </navigation>

@@ -10,7 +10,7 @@ import dagger.Provides
 class AuthorizationModule {
 
     @Provides
-    @AuthorizationScreenScope
+    @AuthorizationFeatureScope
     fun provideYandexSdk(
         context: Context,
         options: YandexAuthOptions

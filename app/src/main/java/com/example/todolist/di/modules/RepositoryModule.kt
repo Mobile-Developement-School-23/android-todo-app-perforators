@@ -10,6 +10,8 @@ import com.example.todo.synchronizer.LastWriteWinsSynchronizer
 import com.example.todo.synchronizer.Synchronizer
 import com.example.todo_api.TodoItemsRepository
 import com.example.authorization_api.TokenRepository
+import com.example.settings_api.SettingsRepository
+import com.example.settings_impl.SettingsRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import javax.inject.Singleton
@@ -24,6 +26,10 @@ interface RepositoryModule {
     @Binds
     @Singleton
     fun bindTokenRepository(impl: TokenRepositoryImpl): TokenRepository
+
+    @Binds
+    @Singleton
+    fun bindSettingsRepository(impl: SettingsRepositoryImpl): SettingsRepository
 
     @Binds
     fun bindTodoLocalDataSource(impl: TodoLocalDataSourceImpl): TodoLocalDataSource

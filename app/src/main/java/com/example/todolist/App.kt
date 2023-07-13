@@ -3,13 +3,12 @@ package com.example.todolist
 import android.app.Application
 import androidx.work.Configuration
 import androidx.work.WorkManager
-import com.example.authorization.di.AuthorizationDepsStore
+import com.example.authorization.di.AuthorizationFeatureDepsStore
+import com.example.di.TodoFeatureDepsStore
 import com.example.todo.workers.WorkersPipeline
 import com.example.todo.workers.periodic.SynchronizedWorkerFactory
-import com.example.edittodo.di.DetailDepsStore
 import com.example.todolist.di.ApplicationComponent
 import com.example.todolist.di.DaggerApplicationComponent
-import com.example.todolist.di.TodoItemsDepsStore
 import javax.inject.Inject
 
 class App : Application() {
@@ -32,9 +31,8 @@ class App : Application() {
     }
 
     private fun initDependencies() {
-        AuthorizationDepsStore.deps = applicationComponent
-        DetailDepsStore.deps = applicationComponent
-        TodoItemsDepsStore.deps = applicationComponent
+        AuthorizationFeatureDepsStore.deps = applicationComponent
+        TodoFeatureDepsStore.deps = applicationComponent
     }
 
     private fun configureWorkManager() {
