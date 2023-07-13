@@ -74,7 +74,7 @@ class TodoItemsRepositoryImpl @Inject constructor(
     override suspend fun addNew(item: TodoItem) = withErrorHandler {
         val newItem = item.copy(lastUpdatedBy = deviceId.value)
         changeItem(
-            block = {
+            action = {
                 todoLocalDataSource.insertOne(newItem, SyncStatus.ADDED)
                 todoRemoteDataSource.addNew(revision.value, newItem)
             },
@@ -85,7 +85,7 @@ class TodoItemsRepositoryImpl @Inject constructor(
     override suspend fun edit(item: TodoItem) = withErrorHandler {
         val newItem = item.copy(lastUpdatedBy = deviceId.value)
         changeItem(
-            block = {
+            action = {
                 todoLocalDataSource.insertOne(newItem, SyncStatus.EDITED)
                 todoRemoteDataSource.edit(revision.value, newItem)
             },
@@ -95,7 +95,7 @@ class TodoItemsRepositoryImpl @Inject constructor(
 
     override suspend fun remove(item: TodoItem) = withErrorHandler {
         changeItem(
-            block = {
+            action = {
                 todoLocalDataSource.insertOne(item, SyncStatus.DELETED)
                 todoRemoteDataSource.delete(revision.value, item.id)
             },
@@ -113,10 +113,10 @@ class TodoItemsRepositoryImpl @Inject constructor(
         }
 
     private suspend fun changeItem(
-        block: suspend () -> Result<RevisionData<TodoItem>>,
+        action: suspend () -> Result<RevisionData<TodoItem>>,
         onSuccess: suspend (TodoItem) -> Unit
     ): Result<TodoItem> {
-        return block()
+        return action()
             .onSuccess {
                 onSuccess(it.data)
                 revisionLocalDataSource.change(it.revision)
