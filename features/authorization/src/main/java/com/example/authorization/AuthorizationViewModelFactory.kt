@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.authorization.di.AuthorizationScreenScope
 import com.example.authorization.navigation.AuthorizationNavCommandProvider
-import com.example.domain.TokenRepository
+import com.example.authorization_api.TokenRepository
 import javax.inject.Inject
 
 @AuthorizationScreenScope

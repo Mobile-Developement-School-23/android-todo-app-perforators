@@ -2,7 +2,7 @@ package com.example.todolist
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.domain.TodoItemsRepository
+import com.example.todo_api.TodoItemsRepository
 import com.example.todolist.di.TodoItemsScreenScope
 import com.example.todolist.navigation.TodoListNavCommandProvider
 import javax.inject.Inject

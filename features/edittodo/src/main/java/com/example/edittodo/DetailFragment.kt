@@ -12,12 +12,11 @@ import androidx.lifecycle.lifecycleScope
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.example.commom.convertToDate
 import com.example.commom.convertToString
-import com.example.domain.models.TodoItem
-import com.example.domain.models.importanceFrom
 import com.example.edittodo.databinding.FragmentDetailBinding
 import com.example.edittodo.di.DaggerDetailScreenComponent
 import com.example.edittodo.di.DetailDepsStore
 import com.example.navigation.navigateUp
+import com.example.todo_api.models.TodoItem
 import com.example.utils.showToast
 import kotlinx.coroutines.launch
 import java.util.Calendar
@@ -62,7 +61,7 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
             val date = binding.date.text.toString()
             viewModel.save(
                 text = binding.text.text.toString(),
-                importance = importanceFrom(binding.pickImportance.selectedItemId.toInt()),
+                importance = com.example.todo_api.models.importanceFrom(binding.pickImportance.selectedItemId.toInt()),
                 deadline = if (date.isNotEmpty()) date.convertToDate() else null
             )
         }

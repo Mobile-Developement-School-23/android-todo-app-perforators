@@ -2,10 +2,10 @@ package com.example.todolist
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.domain.TodoItemsRepository
-import com.example.domain.models.Items
-import com.example.domain.models.TodoItem
+import com.example.todo_api.TodoItemsRepository
 import com.example.navigation.NavCommand
+import com.example.todo_api.models.Items
+import com.example.todo_api.models.TodoItem
 import com.example.todolist.navigation.TodoListNavCommandProvider
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.Channel.Factory.BUFFERED

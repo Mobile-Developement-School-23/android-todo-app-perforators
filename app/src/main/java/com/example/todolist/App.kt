@@ -4,8 +4,8 @@ import android.app.Application
 import androidx.work.Configuration
 import androidx.work.WorkManager
 import com.example.authorization.di.AuthorizationDepsStore
-import com.example.data.workers.WorkersPipeline
-import com.example.data.workers.periodic.SynchronizedWorkerFactory
+import com.example.todo.workers.WorkersPipeline
+import com.example.todo.workers.periodic.SynchronizedWorkerFactory
 import com.example.edittodo.di.DetailDepsStore
 import com.example.todolist.di.ApplicationComponent
 import com.example.todolist.di.DaggerApplicationComponent

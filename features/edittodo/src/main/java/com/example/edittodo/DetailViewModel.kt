@@ -2,9 +2,9 @@ package com.example.edittodo
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.domain.models.TodoItem
-import com.example.domain.TodoItemsRepository
-import com.example.domain.models.Importance
+import com.example.todo_api.TodoItemsRepository
+import com.example.todo_api.models.Importance
+import com.example.todo_api.models.TodoItem
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.Channel.Factory.BUFFERED
 import kotlinx.coroutines.flow.MutableStateFlow

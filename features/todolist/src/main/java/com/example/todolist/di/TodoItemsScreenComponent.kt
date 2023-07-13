@@ -1,5 +1,6 @@
 package com.example.todolist.di
 
+import com.example.todolist.TodoListFragment
 import dagger.Component
 
 @TodoItemsScreenScope
@@ -8,7 +9,7 @@ import dagger.Component
 )
 interface TodoItemsScreenComponent {
 
-    fun inject(fragment: com.example.todolist.TodoListFragment)
+    fun inject(fragment: TodoListFragment)
 
     @Component.Factory
     interface Factory {

@@ -8,8 +8,8 @@ import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.example.commom.convertToString
-import com.example.domain.models.Importance
-import com.example.domain.models.TodoItem
+import com.example.todo_api.models.Importance
+import com.example.todo_api.models.TodoItem
 
 class TodoItemViewHolder(
     private val root: View,

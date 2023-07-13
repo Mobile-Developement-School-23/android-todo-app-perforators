@@ -1,6 +1,6 @@
 package com.example.todolist.di
 
-import com.example.domain.TodoItemsRepository
+import com.example.todo_api.TodoItemsRepository
 import com.example.todolist.navigation.TodoListNavCommandProvider
 import kotlin.properties.Delegates.notNull
 

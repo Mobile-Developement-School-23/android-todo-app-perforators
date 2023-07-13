@@ -1,6 +1,6 @@
 package com.example.edittodo.di
 
-import com.example.domain.TodoItemsRepository
+import com.example.todo_api.TodoItemsRepository
 import kotlin.properties.Delegates.notNull
 
 interface DetailScreenDependencies {

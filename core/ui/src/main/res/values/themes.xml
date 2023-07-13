@@ -2,6 +2,7 @@
     <style name="Theme.ToDo" parent="Theme.MaterialComponents.DayNight.NoActionBar" >
         <item name="android:statusBarColor">@color/back_primary</item>
         <item name="colorPrimary">@color/label_primary</item>
+        <item name="colorAccent">@color/label_secondary</item>
         <item name="android:windowLightStatusBar">true</item>
     </style>
 </resources>

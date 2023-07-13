@@ -2,7 +2,7 @@ package com.example.authorization.di
 
 import android.content.Context
 import com.example.authorization.navigation.AuthorizationNavCommandProvider
-import com.example.domain.TokenRepository
+import com.example.authorization_api.TokenRepository
 import kotlin.properties.Delegates.notNull
 
 interface AuthorizationScreenDependencies {
