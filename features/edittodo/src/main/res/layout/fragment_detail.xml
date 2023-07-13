@@ -19,18 +19,18 @@
 
     <TextView
         android:id="@+id/save"
+        style="@style/Button.Bold.Blue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/middle_margin"
         android:text="@string/save"
-        android:textColor="@color/color_blue"
-        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/cancel"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/cancel" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textField"
+        style="@style/DefaultTextField"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginStart="@dimen/middle_margin"
@@ -38,11 +38,6 @@
         android:layout_marginEnd="@dimen/middle_margin"
         android:layout_marginBottom="@dimen/big_margin"
         android:hint="@string/whatTodo"
-        android:textColor="@color/label_primary"
-        android:textColorHint="@color/label_tertiary"
-        app:boxBackgroundColor="@color/back_secondary"
-        app:boxStrokeColor="@color/back_secondary"
-        app:hintTextColor="@color/label_tertiary"
         app:layout_constraintBottom_toTopOf="@+id/importance_title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -58,14 +53,12 @@
 
     <TextView
         android:id="@+id/importance_title"
+        style="@style/Body.Bold.LabelPrimary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/middle_margin"
         android:layout_marginBottom="@dimen/very_small_margin"
         android:text="@string/importance"
-        android:textColor="@color/label_primary"
-        android:textSize="@dimen/middle_text_size"
-        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/pick_importance"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -94,13 +87,11 @@
 
     <TextView
         android:id="@+id/date_title"
+        style="@style/Body.Bold.LabelPrimary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/middle_margin"
         android:text="@string/deadline"
-        android:textColor="@color/label_primary"
-        android:textSize="@dimen/middle_text_size"
-        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@id/date"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -117,11 +108,10 @@
 
     <TextView
         android:id="@+id/date"
+        style="@style/Subhead.Blue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/big_margin"
-        android:textColor="@color/color_blue"
-        android:textSize="@dimen/small_text_size"
         app:layout_constraintBottom_toTopOf="@id/materialDivider2"
         app:layout_constraintStart_toStartOf="@+id/date_title" />
 
@@ -157,12 +147,11 @@
 
         <TextView
             android:id="@+id/delete_text"
+            style="@style/Subhead.Bold.Red"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/small_margin"
             android:text="@string/delete"
-            android:textColor="@color/color_red"
-            android:textSize="@dimen/small_text_size"
             android:textStyle="bold" />
 
     </LinearLayout>

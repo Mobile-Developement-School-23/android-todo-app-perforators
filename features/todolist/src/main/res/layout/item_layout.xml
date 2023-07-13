@@ -16,15 +16,12 @@
 
     <TextView
         android:id="@+id/text"
+        style="@style/Body.Limited.LabelPrimary"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/very_small_margin"
         android:layout_marginEnd="@dimen/small_margin"
-        android:ellipsize="end"
-        android:maxLines="3"
         android:text="@string/todo"
-        android:textColor="@color/label_primary"
-        android:textSize="@dimen/middle_text_size"
         app:layout_constraintBottom_toBottomOf="@+id/is_done"
         app:layout_constraintEnd_toStartOf="@+id/info"
         app:layout_constraintStart_toEndOf="@+id/importance"
@@ -32,10 +29,9 @@
 
     <TextView
         android:id="@+id/deadline"
+        style="@style/SmallBody.LabelTertiary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/label_tertiary"
-        android:textSize="@dimen/tiny_text_size"
         android:visibility="visible"
         app:layout_constraintStart_toStartOf="@+id/text"
         app:layout_constraintTop_toBottomOf="@+id/text" />
