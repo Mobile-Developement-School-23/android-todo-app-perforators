@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="apply">ПРИМЕНИТЬ</string>
+    <string name="theme">Тема</string>
+    <string-array name="themes">
+        <item>Всегда светлая</item>
+        <item>Всегда тёмная</item>
+        <item>Как в системе</item>
+    </string-array>
+</resources>

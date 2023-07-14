@@ -66,6 +66,9 @@ class TodoListFragment : Fragment(R.layout.fragment_todoitems) {
         binding.addItem.setOnClickListener {
             viewModel.createNewTodoItem()
         }
+        binding.settings.setOnClickListener {
+            viewModel.openSettings()
+        }
     }
 
     private fun initSwipeRefresh() {
@@ -111,6 +114,7 @@ class TodoListFragment : Fragment(R.layout.fragment_todoitems) {
             is TodoListViewModel.Event.ShowError -> showToast(event.text)
             is TodoListViewModel.Event.HideRefreshProgressBar ->
                 binding.swipeLayout.isRefreshing = false
+            is TodoListViewModel.Event.OpenSettings -> navigate(event.command)
         }
     }
 

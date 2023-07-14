@@ -1,5 +1,6 @@
 package com.example.todo
 
+import com.example.commom.SafeHolder
 import com.example.todo.synchronizer.SyncStatus
 import com.example.todo.local.sources.DeviceIdLocalDataSource
 import com.example.todo.local.sources.RevisionLocalDataSource
@@ -31,11 +32,13 @@ class TodoItemsRepositoryImpl @Inject constructor(
     private val areSynchronized = MutableStateFlow(false)
     private val scope = CoroutineScope(dispatcher)
 
+    private val lastDeletedItem = SafeHolder<TodoItem?> { null }
+
     private val deviceId = deviceIdLocalDataSource.deviceId
         .stateIn(scope, SharingStarted.Eagerly, "")
 
     private val revision = revisionLocalDataSource.revision
-        .stateIn(scope, SharingStarted.Eagerly, -1)
+        .stateIn(scope, SharingStarted.Eagerly, 0)
 
     override fun observeAll() = todoLocalDataSource.observeAll().combine(areSynchronized, ::Items)
 
@@ -61,6 +64,10 @@ class TodoItemsRepositoryImpl @Inject constructor(
             }.onFailure {
                 areSynchronized.value = false
             }
+    }
+
+    override suspend fun restoreLastDeletedItem() {
+        lastDeletedItem.get()?.let { addNew(it) }
     }
 
     override suspend fun fetchOne(id: String) = withErrorHandler {
@@ -96,6 +103,7 @@ class TodoItemsRepositoryImpl @Inject constructor(
     override suspend fun remove(item: TodoItem) = withErrorHandler {
         changeItem(
             action = {
+                lastDeletedItem.update { item }
                 todoLocalDataSource.insertOne(item, SyncStatus.DELETED)
                 todoRemoteDataSource.delete(revision.value, item.id)
             },
@@ -118,8 +126,8 @@ class TodoItemsRepositoryImpl @Inject constructor(
     ): Result<TodoItem> {
         return action()
             .onSuccess {
-                onSuccess(it.data)
                 revisionLocalDataSource.change(it.revision)
+                onSuccess(it.data)
             }
             .map { it.data }
     }

@@ -19,6 +19,7 @@ import com.example.utils.showToast
 import com.example.R
 import com.example.di.DaggerTodoFeatureComponent
 import com.example.di.TodoFeatureDepsStore
+import com.example.todo_api.models.importanceFrom
 import kotlinx.coroutines.launch
 import java.util.Calendar
 import javax.inject.Inject
@@ -62,7 +63,7 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
             val date = binding.date.text.toString()
             viewModel.save(
                 text = binding.text.text.toString(),
-                importance = com.example.todo_api.models.importanceFrom(binding.pickImportance.selectedItemId.toInt()),
+                importance = importanceFrom(binding.pickImportance.selectedItemId.toInt()),
                 deadline = if (date.isNotEmpty()) date.convertToDate() else null
             )
         }

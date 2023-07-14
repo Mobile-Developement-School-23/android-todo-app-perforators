@@ -5,6 +5,7 @@ import androidx.work.Configuration
 import androidx.work.WorkManager
 import com.example.authorization.di.AuthorizationFeatureDepsStore
 import com.example.di.TodoFeatureDepsStore
+import com.example.settings.di.SettingsFeatureDepsStore
 import com.example.todo.workers.WorkersPipeline
 import com.example.todo.workers.periodic.SynchronizedWorkerFactory
 import com.example.todolist.di.ApplicationComponent
@@ -13,7 +14,7 @@ import javax.inject.Inject
 
 class App : Application() {
 
-    private lateinit var applicationComponent: ApplicationComponent
+    internal lateinit var applicationComponent: ApplicationComponent
 
     @Inject
     internal lateinit var workerFactory: SynchronizedWorkerFactory
@@ -33,6 +34,7 @@ class App : Application() {
     private fun initDependencies() {
         AuthorizationFeatureDepsStore.deps = applicationComponent
         TodoFeatureDepsStore.deps = applicationComponent
+        SettingsFeatureDepsStore.deps = applicationComponent
     }
 
     private fun configureWorkManager() {

@@ -48,6 +48,12 @@ class TodoListViewModel(
         _events.send(Event.HideRefreshProgressBar)
     }
 
+    fun openSettings() {
+        viewModelScope.launch {
+            _events.send(Event.OpenSettings(commandProvider.navigateToSettings()))
+        }
+    }
+
     fun toggleDone(item: TodoItem) = viewModelScope.launch {
         val currentDate = Date(System.currentTimeMillis())
         repository.edit(
@@ -88,6 +94,7 @@ class TodoListViewModel(
     sealed interface Event {
         data class CreateNewTodoItem(val command: NavCommand) : Event
         object HideRefreshProgressBar : Event
+        data class OpenSettings(val command: NavCommand) : Event
         data class ShowError(val text: String) : Event
         data class EditTodoItem(val itemId: String, val command: NavCommand) : Event
     }

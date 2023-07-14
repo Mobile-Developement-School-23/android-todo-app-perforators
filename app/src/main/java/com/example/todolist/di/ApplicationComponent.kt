@@ -4,6 +4,8 @@ import android.content.Context
 import com.example.authorization.di.AuthorizationFeatureDependencies
 import com.example.todolist.App
 import com.example.di.TodoFeatureDependencies
+import com.example.settings.di.SettingsFeatureDependencies
+import com.example.todolist.MainActivity
 import com.example.todolist.di.modules.CoreModule
 import com.example.todolist.di.modules.NavModule
 import com.example.todolist.di.modules.NetworkModule
@@ -22,9 +24,11 @@ import javax.inject.Singleton
     NavModule::class
 ])
 interface ApplicationComponent
-    : TodoFeatureDependencies, AuthorizationFeatureDependencies {
+    : TodoFeatureDependencies, AuthorizationFeatureDependencies, SettingsFeatureDependencies {
 
     fun inject(application: App)
+
+    fun inject(activity: MainActivity)
 
     @Component.Factory
     interface Factory {

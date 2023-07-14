@@ -22,6 +22,7 @@ class SettingsViewModel(
         viewModelScope.launch {
             repository.updateTheme(newTheme)
         }
+        goBack()
     }
 
     fun goBack() {

@@ -8,6 +8,8 @@ interface TodoItemsRepository {
 
     fun observeAll(): Flow<Items>
 
+    suspend fun restoreLastDeletedItem()
+
     suspend fun fetchAll(): Result<Unit>
 
     suspend fun fetchOne(id: String): Result<TodoItem>
