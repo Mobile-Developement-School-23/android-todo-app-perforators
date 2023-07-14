@@ -34,10 +34,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun applyTheme(newTheme: Theme) {
-        when (newTheme) {
-            Theme.LIGHT -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-            Theme.BLACK -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            else -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+        val mode = when (newTheme) {
+            Theme.LIGHT -> AppCompatDelegate.MODE_NIGHT_NO
+            Theme.BLACK -> AppCompatDelegate.MODE_NIGHT_YES
+            else -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
         }
+        AppCompatDelegate.setDefaultNightMode(mode)
     }
 }
