@@ -117,17 +117,21 @@ dependencyResolutionManagement {
                     .versionRef("compose")
             library("compose-ui", "androidx.compose.ui", "ui")
                     .versionRef("compose")
-            library("compose-ui-tooling", "androidx.compose.ui", "ui-tooling-preview")
+            library("compose-ui-tooling", "androidx.compose.ui", "ui-tooling")
+                    .versionRef("compose")
+            library("compose-ui-tooling-preview", "androidx.compose.ui", "ui-tooling-preview")
                     .versionRef("compose")
             library("compose-foundation", "androidx.compose.foundation", "foundation")
                     .versionRef("compose")
             library("compose-lifecycle", "androidx.lifecycle", "lifecycle-runtime-compose")
                     .versionRef("compose-lifecycle")
             bundle("compose", ["compose-material3", "compose-material", "compose-ui",
-                               "compose-ui-tooling", "compose-foundation", "compose-lifecycle"])
+                               "compose-ui-tooling", "compose-foundation", "compose-lifecycle"
+                               , "compose-ui-tooling-preview"])
         }
     }
 }
+
 rootProject.name = "TodoList"
 include ':app'
 include ':features:todo'

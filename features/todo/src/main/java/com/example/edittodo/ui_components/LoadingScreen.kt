@@ -9,8 +9,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.ui_core.ExtendedTheme
+import com.example.ui_core.TodoAppTheme
 
-@Preview
 @Composable
 fun LoadingScreen() {
     Box(
@@ -22,5 +22,13 @@ fun LoadingScreen() {
             modifier = Modifier.align(Alignment.Center),
             color = ExtendedTheme.colors.labelPrimary
         )
+    }
+}
+
+@Preview
+@Composable
+private fun LoadingScreenPreview() {
+    TodoAppTheme {
+        LoadingScreen()
     }
 }

@@ -2,7 +2,7 @@ package com.example.todo_api.models
 
 enum class Importance(val id: Int, val value: String) {
     LOW(0, "Низкая"),
-    NORMAL(1, "Нормальнвя"),
+    NORMAL(1, "Нормальная"),
     HIGH(2, "Высокая")
 }
 

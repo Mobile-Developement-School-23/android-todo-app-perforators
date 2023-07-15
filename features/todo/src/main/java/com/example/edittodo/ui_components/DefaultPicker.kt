@@ -1,6 +1,8 @@
 package com.example.edittodo.ui_components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -21,8 +23,8 @@ import androidx.compose.ui.unit.sp
 import com.example.R
 import com.example.ui_core.Blue
 import com.example.ui_core.ExtendedTheme
+import com.example.ui_core.TodoAppTheme
 
-@Preview
 @Composable
 fun DefaultPicker(
     title: String = stringResource(R.string.deadline),
@@ -58,6 +60,20 @@ fun DefaultPicker(
                 painter = pickImage,
                 contentDescription = null
             )
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun DefaultPickerPreview() {
+    TodoAppTheme {
+        Box(
+            modifier = Modifier
+                .background(ExtendedTheme.colors.backPrimary)
+                .padding(16.dp)
+        ) {
+            DefaultPicker()
         }
     }
 }

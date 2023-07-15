@@ -10,8 +10,8 @@ import com.example.commom.splitOnTimeAndDate
 import com.example.edittodo.DetailViewModel
 import com.example.todo_api.models.Importance
 import com.example.ui_core.ExtendedTheme
+import com.example.ui_core.TodoAppTheme
 
-@Preview
 @Composable
 fun ContentScreen(
     onGoBack: () -> Unit = {},
@@ -37,5 +37,13 @@ fun ContentScreen(
             DefaultDivider()
             DeleteLayout(state.isNew, onDelete)
         }
+    }
+}
+
+@Preview
+@Composable
+private fun ContentScreenPreview() {
+    TodoAppTheme {
+        ContentScreen()
     }
 }

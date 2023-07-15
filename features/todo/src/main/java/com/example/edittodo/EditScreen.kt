@@ -23,7 +23,6 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
-@Preview
 @Composable
 fun EditScreen(
     onGoBack: () -> Unit = {},
@@ -75,7 +74,7 @@ fun EditScreen(
 
 @Preview
 @Composable
-fun PreviewEditScreenLight() {
+private fun PreviewEditScreenLight() {
     TodoAppTheme(darkTheme = false) {
         EditScreen()
     }
@@ -83,7 +82,7 @@ fun PreviewEditScreenLight() {
 
 @Preview
 @Composable
-fun PreviewEditScreenDark() {
+private fun PreviewEditScreenDark() {
     TodoAppTheme(darkTheme = true) {
         EditScreen()
     }

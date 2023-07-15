@@ -1,7 +1,9 @@
 package com.example.edittodo.ui_components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
@@ -17,8 +19,8 @@ import androidx.compose.ui.unit.sp
 import com.example.R
 import com.example.ui_core.ExtendedTheme
 import com.example.ui_core.Red
+import com.example.ui_core.TodoAppTheme
 
-@Preview
 @Composable
 fun DeleteLayout(
     isNewItem: Boolean = false,
@@ -45,5 +47,19 @@ fun DeleteLayout(
             color = if (isNewItem) ExtendedTheme.colors.labelDisable else Red,
             fontWeight = FontWeight.Bold
         )
+    }
+}
+
+@Preview
+@Composable
+private fun DeleteLayoutPreview() {
+    TodoAppTheme {
+        Box(
+            modifier = Modifier
+                .background(ExtendedTheme.colors.backPrimary)
+                .padding(16.dp)
+        ) {
+            DeleteLayout()
+        }
     }
 }

@@ -1,7 +1,9 @@
 package com.example.edittodo.ui_components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,8 +21,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.R
 import com.example.ui_core.Blue
+import com.example.ui_core.ExtendedTheme
+import com.example.ui_core.TodoAppTheme
 
-@Preview
 @Composable
 fun TopAppBar(
     onSave: () -> Unit = {},
@@ -49,5 +52,19 @@ fun TopAppBar(
             fontSize = 14.sp,
             fontWeight = FontWeight.Bold
         )
+    }
+}
+
+@Preview
+@Composable
+private fun TopAppBarPreview() {
+    TodoAppTheme {
+        Box(
+            modifier = Modifier
+                .background(ExtendedTheme.colors.backPrimary)
+                .padding(16.dp)
+        ) {
+            TopAppBar()
+        }
     }
 }
