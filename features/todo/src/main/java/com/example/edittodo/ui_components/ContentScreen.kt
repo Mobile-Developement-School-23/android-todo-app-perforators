@@ -2,6 +2,8 @@ package com.example.edittodo.ui_components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -27,7 +29,11 @@ fun ContentScreen(
         containerColor = ExtendedTheme.colors.backPrimary
     ) {
         val (date, time) = state.item.deadline?.splitOnTimeAndDate() ?: (null to null)
-        Column(modifier = Modifier.padding(it)) {
+        Column(
+            modifier = Modifier
+                .padding(it)
+                .verticalScroll(rememberScrollState())
+        ) {
             TodoTextField(state.item.text, onSelect)
             PickImportance(importance, onShowBottomSheet)
             DefaultDivider()

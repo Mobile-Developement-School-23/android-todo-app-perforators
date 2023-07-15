@@ -1,6 +1,7 @@
 package com.example.edittodo
 
 import android.widget.Toast
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetValue
@@ -12,8 +13,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.example.edittodo.ui_components.ContentScreen
 import com.example.edittodo.ui_components.LoadingScreen
 import com.example.edittodo.ui_components.SheetContent
@@ -59,7 +62,8 @@ fun EditScreen(
                 }
             },
             sheetState = bottomSheetState,
-            sheetBackgroundColor = ExtendedTheme.colors.backSecondary
+            sheetBackgroundColor = ExtendedTheme.colors.backSecondary,
+            sheetShape = RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp)
         ) {
             ContentScreen(
                 onGoBack = onGoBack,
