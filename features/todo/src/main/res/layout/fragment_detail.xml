@@ -14,6 +14,7 @@
         android:layout_marginTop="@dimen/middle_margin"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        android:foreground="?android:attr/selectableItemBackgroundBorderless"
         app:srcCompat="@drawable/cancel"
         tools:ignore="ContentDescription" />
 
@@ -24,6 +25,9 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/middle_margin"
         android:text="@string/save"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?android:attr/selectableItemBackgroundBorderless"
         app:layout_constraintBottom_toBottomOf="@+id/cancel"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/cancel" />
@@ -101,6 +105,9 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/middle_margin"
         app:layout_constraintBottom_toBottomOf="@+id/date_title"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?android:attr/selectableItemBackgroundBorderless"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/date_title"
         app:srcCompat="@drawable/calendar"
@@ -134,6 +141,9 @@
         android:layout_marginStart="@dimen/middle_margin"
         android:layout_marginBottom="@dimen/big_margin"
         android:gravity="center"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?android:attr/selectableItemBackgroundBorderless"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         tools:ignore="UseCompoundDrawables">
