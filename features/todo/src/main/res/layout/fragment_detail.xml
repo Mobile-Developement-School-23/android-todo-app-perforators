@@ -61,20 +61,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/middle_margin"
-        android:layout_marginBottom="@dimen/very_small_margin"
         android:text="@string/importance"
-        app:layout_constraintBottom_toTopOf="@+id/pick_importance"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Spinner
-        android:id="@+id/pick_importance"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/small_margin"
-        android:layout_marginBottom="@dimen/big_margin"
-        android:entries="@array/importances"
-        android:spinnerMode="dropdown"
-        app:layout_constraintBottom_toTopOf="@+id/materialDivider"
+        app:layout_constraintBottom_toTopOf="@+id/importance"
         app:layout_constraintStart_toStartOf="parent" />
 
     <com.google.android.material.divider.MaterialDivider
@@ -105,8 +93,6 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/middle_margin"
         app:layout_constraintBottom_toBottomOf="@+id/date_title"
-        android:clickable="true"
-        android:focusable="true"
         android:foreground="?android:attr/selectableItemBackgroundBorderless"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/date_title"
@@ -165,6 +151,27 @@
             android:textStyle="bold" />
 
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/pick_importance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/middle_margin"
+        android:foreground="?android:attr/selectableItemBackgroundBorderless"
+        app:layout_constraintBottom_toBottomOf="@+id/importance_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/importance_title"
+        app:srcCompat="@drawable/pick" />
+
+    <TextView
+        android:id="@+id/importance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/middle_margin"
+        android:layout_marginBottom="@dimen/big_margin"
+        app:layout_constraintBottom_toTopOf="@+id/materialDivider"
+        style="@style/Subhead.Blue"
+        app:layout_constraintStart_toStartOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

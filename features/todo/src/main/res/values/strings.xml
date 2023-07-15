@@ -20,6 +20,9 @@
     <string name="notifications_title">Разрешение на уведомления</string>
     <string name="notifications_message">Разрешение необходимо на показ уведомлений о дедлайне дел.</string>
     <string name="delay_notification">Отложить на день</string>
+    <string name="low">Низкая</string>
+    <string name="medium">Средняя</string>
+    <string name="high">Высокая</string>
     <string-array name="importances">
         <item>Низкая</item>
         <item>Нет</item>

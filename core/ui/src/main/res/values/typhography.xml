@@ -31,6 +31,9 @@
     <style name="LargeTitle.Bold.LabelPrimary">
         <item name="android:textColor">@color/label_primary</item>
     </style>
+    <style name="LargeTitle.BackPrimary">
+        <item name="android:textColor">@color/back_primary</item>
+    </style>
 
     <style name="Body.LabelTertiary">
         <item name="android:textColor">@color/label_tertiary</item>

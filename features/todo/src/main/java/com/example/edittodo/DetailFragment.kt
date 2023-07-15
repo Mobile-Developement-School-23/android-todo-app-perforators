@@ -5,6 +5,7 @@ import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
@@ -19,7 +20,6 @@ import com.example.utils.showToast
 import com.example.R
 import com.example.di.DaggerTodoFeatureComponent
 import com.example.di.TodoFeatureDepsStore
-import com.example.todo_api.models.importanceFrom
 import kotlinx.coroutines.launch
 import java.util.Calendar
 import javax.inject.Inject
@@ -36,6 +36,7 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
         arguments?.getString(ITEM_KEY) ?: ""
     }
     private val viewModel: DetailViewModel by viewModels { viewModelFactory }
+    private val importancePickViewModel: ImportancePickViewModel by activityViewModels()
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -59,11 +60,13 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
         binding.pickDate.setOnClickListener {
             viewModel.showDatePicker()
         }
+        binding.pickImportance.setOnClickListener {
+            viewModel.pickImportance()
+        }
         binding.save.setOnClickListener {
             val date = binding.date.text.toString()
             viewModel.save(
                 text = binding.text.text.toString(),
-                importance = importanceFrom(binding.pickImportance.selectedItemId.toInt()),
                 deadline = if (date.isNotEmpty()) date.convertToDate() else null
             )
         }
@@ -97,11 +100,16 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
                 .flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.STARTED)
                 .collect(::handle)
         }
+        viewLifecycleOwner.lifecycleScope.launch {
+            importancePickViewModel.pickedImportanceId
+                .flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.STARTED)
+                .collect(viewModel::changeImportance)
+        }
     }
 
     private fun render(item: TodoItem) {
         binding.text.setText(item.text)
-        binding.pickImportance.setSelection(item.importance.id)
+        binding.importance.text = item.importance.value
         if (item.deadline != null) {
             binding.date.visibility = View.VISIBLE
             binding.date.text = item.deadline!!.convertToString()
@@ -115,6 +123,8 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
             is DetailViewModel.Event.GoBack -> navigateUp()
             is DetailViewModel.Event.ShowDatePicker -> showDatePicker()
             is DetailViewModel.Event.ShowError -> showToast(event.text)
+            is DetailViewModel.Event.PickImportance ->
+                ImportancePickerFragment.newInstance().show(childFragmentManager, null)
         }
     }
 

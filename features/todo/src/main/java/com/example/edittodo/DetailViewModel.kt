@@ -3,13 +3,14 @@ package com.example.edittodo
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.todo_api.TodoItemsRepository
-import com.example.todo_api.models.Importance
 import com.example.todo_api.models.TodoItem
+import com.example.todo_api.models.importanceFrom
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.Channel.Factory.BUFFERED
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.Date
 
@@ -35,6 +36,11 @@ class DetailViewModel(
         }
     }
 
+    fun changeImportance(importanceId: Int) {
+        val importance = importanceFrom(importanceId)
+        _item.update { it.copy(importance = importance) }
+    }
+
     fun delete() {
         viewModelScope.launch {
             repository.remove(_item.value)
@@ -43,12 +49,11 @@ class DetailViewModel(
         }
     }
 
-    fun save(text: String, importance: Importance, deadline: Date?) {
+    fun save(text: String, deadline: Date?) {
         val currentItem = _item.value
         val currentDate = Date(System.currentTimeMillis())
         val newItem = currentItem.copy(
             text = text,
-            importance = importance,
             deadline = deadline,
             changeData = currentDate
         )
@@ -59,6 +64,12 @@ class DetailViewModel(
                 repository.edit(newItem)
             }.onFailure { _events.send(Event.ShowError(it.message.toString())) }
             cancel()
+        }
+    }
+
+    fun pickImportance() {
+        viewModelScope.launch {
+            _events.send(Event.PickImportance)
         }
     }
 
@@ -77,6 +88,7 @@ class DetailViewModel(
     sealed interface Event {
         object ShowDatePicker : Event
         data class ShowError(val text: String) : Event
+        object PickImportance : Event
         object GoBack : Event
     }
 }
