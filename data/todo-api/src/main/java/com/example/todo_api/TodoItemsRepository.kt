@@ -14,6 +14,8 @@ interface TodoItemsRepository {
 
     suspend fun fetchOne(id: String): Result<TodoItem>
 
+    suspend fun incDeadline(itemId: String, increment: Long)
+
     suspend fun addNew(item: TodoItem): Result<TodoItem>
 
     suspend fun edit(item: TodoItem): Result<TodoItem>

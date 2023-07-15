@@ -107,6 +107,9 @@ dependencyResolutionManagement {
             library("converter", "com.jakewharton.retrofit", "retrofit2-kotlinx-serialization-converter")
                     .versionRef("converter")
             bundle("retrofit", ["retrofit", "okhttp", "logging-interceptor", "converter"])
+
+            version("compose", "2023.06.01")
+            library("compose", "androidx.compose", "compose-bom").versionRef("compose")
         }
     }
 }

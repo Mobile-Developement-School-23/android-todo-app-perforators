@@ -18,6 +18,7 @@ import com.example.navigation.navigate
 import com.example.R
 import com.example.di.DaggerTodoFeatureComponent
 import com.example.di.TodoFeatureDepsStore
+import com.example.notification.additionalscreen.NotifyDialogFragment
 import com.example.utils.showToast
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -115,6 +116,9 @@ class TodoListFragment : Fragment(R.layout.fragment_todoitems) {
             is TodoListViewModel.Event.HideRefreshProgressBar ->
                 binding.swipeLayout.isRefreshing = false
             is TodoListViewModel.Event.OpenSettings -> navigate(event.command)
+            is TodoListViewModel.Event.ShowNotifyScreen -> {
+                NotifyDialogFragment().show(childFragmentManager, null)
+            }
         }
     }
 

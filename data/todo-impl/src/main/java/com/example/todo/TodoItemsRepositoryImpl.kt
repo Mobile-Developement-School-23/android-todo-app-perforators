@@ -2,12 +2,13 @@ package com.example.todo
 
 import com.example.commom.SafeHolder
 import com.example.todo.synchronizer.SyncStatus
-import com.example.todo.local.sources.DeviceIdLocalDataSource
+import com.example.todo.local.sources.DeviceIdDataSource
 import com.example.todo.local.sources.RevisionLocalDataSource
 import com.example.todo.local.sources.TodoLocalDataSource
 import com.example.todo.remote.RevisionData
 import com.example.todo.remote.TodoRemoteDataSource
 import com.example.todo.synchronizer.Synchronizer
+import com.example.todo_api.OnChangeTodoListListener
 import com.example.todo_api.TodoItemsRepository
 import com.example.todo_api.models.Items
 import com.example.todo_api.models.TodoItem
@@ -16,26 +17,27 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.withContext
+import java.lang.IllegalStateException
+import java.util.Date
 import javax.inject.Inject
 
 class TodoItemsRepositoryImpl @Inject constructor(
     private val todoRemoteDataSource: TodoRemoteDataSource,
     private val todoLocalDataSource: TodoLocalDataSource,
     private val revisionLocalDataSource: RevisionLocalDataSource,
-    deviceIdLocalDataSource: DeviceIdLocalDataSource,
+    private val deviceIdDataSource: DeviceIdDataSource,
     private val dispatcher: CoroutineDispatcher,
-    private val synchronizer: Synchronizer
+    private val synchronizer: Synchronizer,
+    private val changeListeners: Set<@JvmSuppressWildcards OnChangeTodoListListener> = emptySet()
 ) : TodoItemsRepository {
 
     private val areSynchronized = MutableStateFlow(false)
     private val scope = CoroutineScope(dispatcher)
 
     private val lastDeletedItem = SafeHolder<TodoItem?> { null }
-
-    private val deviceId = deviceIdLocalDataSource.deviceId
-        .stateIn(scope, SharingStarted.Eagerly, "")
 
     private val revision = revisionLocalDataSource.revision
         .stateIn(scope, SharingStarted.Eagerly, 0)
@@ -52,6 +54,7 @@ class TodoItemsRepositoryImpl @Inject constructor(
             .onFailure {
                 areSynchronized.value = false
             }
+        notifyListeners()
         Result.success(Unit)
     }
 
@@ -79,7 +82,7 @@ class TodoItemsRepositoryImpl @Inject constructor(
     }
 
     override suspend fun addNew(item: TodoItem) = withErrorHandler {
-        val newItem = item.copy(lastUpdatedBy = deviceId.value)
+        val newItem = item.copy(lastUpdatedBy = deviceIdDataSource.deviceId.value)
         changeItem(
             action = {
                 todoLocalDataSource.insertOne(newItem, SyncStatus.ADDED)
@@ -90,7 +93,7 @@ class TodoItemsRepositoryImpl @Inject constructor(
     }
 
     override suspend fun edit(item: TodoItem) = withErrorHandler {
-        val newItem = item.copy(lastUpdatedBy = deviceId.value)
+        val newItem = item.copy(lastUpdatedBy = deviceIdDataSource.deviceId.value)
         changeItem(
             action = {
                 todoLocalDataSource.insertOne(newItem, SyncStatus.EDITED)
@@ -111,6 +114,19 @@ class TodoItemsRepositoryImpl @Inject constructor(
         )
     }
 
+    override suspend fun incDeadline(itemId: String, increment: Long) {
+        withErrorHandler {
+            val oldItem = todoLocalDataSource.fetchBy(itemId).first()
+            val date = oldItem.deadline
+            if (date != null) {
+                val newDate = Date(date.time + increment)
+                edit(oldItem.copy(deadline = newDate))
+            } else {
+                Result.failure(IllegalStateException())
+            }
+        }
+    }
+
     private suspend fun <T> withErrorHandler(block: suspend () -> Result<T>) =
         withContext(dispatcher) {
             try {
@@ -129,6 +145,16 @@ class TodoItemsRepositoryImpl @Inject constructor(
                 revisionLocalDataSource.change(it.revision)
                 onSuccess(it.data)
             }
-            .map { it.data }
+            .map {
+                notifyListeners()
+                it.data
+            }
+    }
+
+    private suspend fun notifyListeners() {
+        val items = observeAll().firstOrNull() ?: return
+        changeListeners.forEach {
+            it.onChange(items)
+        }
     }
 }

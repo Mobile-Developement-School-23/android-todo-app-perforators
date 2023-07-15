@@ -27,6 +27,18 @@
                 tools:node="remove" />
         </provider>
 
+        <receiver
+            android:name="com.example.notification.NotifyReceiver"
+            android:enabled="true"
+            android:exported="false" >
+        </receiver>
+
+        <receiver
+            android:name="com.example.notification.DelayNotificationReceiver"
+            android:enabled="true"
+            android:exported="false" >
+        </receiver>
+
         <activity
             android:name="com.example.todolist.MainActivity"
             android:exported="true">

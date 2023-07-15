@@ -1,7 +1,7 @@
 package com.example.settings_impl
 
 import com.example.settings_api.SettingsRepository
-import com.example.settings_api.models.Theme
+import com.example.settings_api.models.Settings
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
@@ -13,10 +13,16 @@ class SettingsRepositoryImpl @Inject constructor(
     private val dispatcher: CoroutineDispatcher
 ) : SettingsRepository {
 
-    override fun fetchSettings() = settingsDataSource.settings
+    override fun observeSettings() = settingsDataSource.settings
         .map { settingsMapper.map(it) }
 
-    override suspend fun updateTheme(newTheme: Theme) = withContext(dispatcher) {
-        settingsDataSource.updateTheme(newTheme)
+    override suspend fun fetchSettings(): Settings {
+        return settingsMapper.map(settingsDataSource.settings.value)
+    }
+
+    override suspend fun updateSettings(action: (Settings) -> Settings) = withContext(dispatcher) {
+        val oldSettings = settingsMapper.map(settingsDataSource.settings.value)
+        val newSettings = settingsMapper.map(action(oldSettings))
+        settingsDataSource.updateSettings(newSettings)
     }
 }

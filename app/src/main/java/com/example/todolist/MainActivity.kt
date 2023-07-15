@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun observeTheme() {
         lifecycleScope.launch {
-            repository.fetchSettings()
+            repository.observeSettings()
                 .flowWithLifecycle(lifecycle, Lifecycle.State.CREATED)
                 .collect {
                     applyTheme(it.theme)

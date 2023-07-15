@@ -13,14 +13,16 @@ class SettingsViewModel(
     private val repository: SettingsRepository
 ) : ViewModel() {
 
-    val settings = repository.fetchSettings()
+    val settings = repository.observeSettings()
 
     private val _events = Channel<Event>(BUFFERED)
     val events = _events.receiveAsFlow()
 
     fun updateTheme(newTheme: Theme) {
         viewModelScope.launch {
-            repository.updateTheme(newTheme)
+            repository.updateSettings {
+                it.copy(theme = newTheme)
+            }
         }
         goBack()
     }

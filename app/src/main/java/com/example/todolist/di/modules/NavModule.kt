@@ -2,7 +2,7 @@ package com.example.todolist.di.modules
 
 import com.example.authorization.navigation.AuthorizationNavCommandProvider
 import com.example.todolist.navigation.AuthorizationNavCommandProviderImpl
-import com.example.todolist.navigation.TodoNavCommandProvider
+import com.example.navigation.TodoNavCommandProvider
 import com.example.todolist.navigation.TodoNavCommandProviderImpl
 import dagger.Binds
 import dagger.Module

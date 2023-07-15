@@ -133,6 +133,6 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
     }
 
     companion object {
-        private const val ITEM_KEY = "item key"
+        const val ITEM_KEY = "item key"
     }
 }

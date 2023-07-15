@@ -6,38 +6,39 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import com.example.utils.dataStore
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.util.UUID
 import javax.inject.Inject
 
-class DeviceIdLocalDataSource @Inject constructor(
+class DeviceIdDataSource @Inject constructor(
     dispatcher: CoroutineDispatcher,
     context: Context
 ) {
 
-    private val deviceIdKey = stringPreferencesKey(KEY)
+    private val key = stringPreferencesKey(KEY)
     private val scope = CoroutineScope(dispatcher)
 
     init {
         scope.launch {
             context.dataStore.edit { preferences ->
-                val oldValue = preferences[deviceIdKey]
+                val oldValue = preferences[key]
                 if (oldValue == null) {
-                    preferences[deviceIdKey] = generateDeviceId()
+                    preferences[key] = generateDeviceId()
                 }
             }
         }
     }
 
-    val deviceId: Flow<String> = context.dataStore.data.map { preferences ->
-        preferences[deviceIdKey] ?: ""
-    }
+    val deviceId = context.dataStore.data.map { preferences ->
+        preferences[key] ?: ""
+    }.stateIn(scope, SharingStarted.Eagerly, "")
 
     private fun generateDeviceId() = UUID.randomUUID().toString()
 
     companion object {
-        private const val KEY = "deviceId key"
+        private const val KEY = "deviceId"
     }
 }

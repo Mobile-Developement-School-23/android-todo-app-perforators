@@ -1,7 +1,9 @@
 package com.example.todo_api.models
 
-enum class Importance(val id: Int) {
-    LOW(0), NORMAL(1), HIGH(2)
+enum class Importance(val id: Int, val value: String) {
+    LOW(0, "Низкая"),
+    NORMAL(1, "Средняя"),
+    HIGH(2, "Высокая")
 }
 
 fun importanceFrom(id: Int): Importance {

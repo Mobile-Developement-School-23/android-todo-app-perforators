@@ -10,10 +10,13 @@ import com.example.todo.synchronizer.LastWriteWinsSynchronizer
 import com.example.todo.synchronizer.Synchronizer
 import com.example.todo_api.TodoItemsRepository
 import com.example.authorization_api.TokenRepository
+import com.example.notification.ChangeListener
 import com.example.settings_api.SettingsRepository
 import com.example.settings_impl.SettingsRepositoryImpl
+import com.example.todo_api.OnChangeTodoListListener
 import dagger.Binds
 import dagger.Module
+import dagger.multibindings.IntoSet
 import javax.inject.Singleton
 
 @Module
@@ -39,4 +42,8 @@ interface RepositoryModule {
 
     @Binds
     fun bindSynchronizer(impl: LastWriteWinsSynchronizer): Synchronizer
+
+    @IntoSet
+    @Binds
+    fun bindOnChangeListener(impl: ChangeListener): OnChangeTodoListListener
 }

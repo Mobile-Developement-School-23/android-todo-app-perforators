@@ -1,12 +1,18 @@
 package com.example.di
 
+import com.example.settings_api.SettingsRepository
 import com.example.todo_api.TodoItemsRepository
-import com.example.todolist.navigation.TodoNavCommandProvider
+import com.example.navigation.TodoNavCommandProvider
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlin.properties.Delegates
 
 interface TodoFeatureDependencies {
 
-    fun repository(): TodoItemsRepository
+    fun todoRepository(): TodoItemsRepository
+
+    fun dispatcher(): CoroutineDispatcher
+
+    fun settingsRepository(): SettingsRepository
 
     fun todoItemsNavCommandProvider(): TodoNavCommandProvider
 }

@@ -3,7 +3,6 @@ package com.example.settings_impl
 import android.content.Context
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
-import com.example.settings_api.models.Theme
 import com.example.settings_impl.entities.SettingsEntity
 import com.example.utils.dataStore
 import kotlinx.coroutines.CoroutineDispatcher
@@ -35,9 +34,9 @@ class SettingsDataSource @Inject constructor(
         }
     }.stateIn(scope, SharingStarted.Eagerly, SettingsEntity())
 
-    suspend fun updateTheme(theme: Theme) {
+    suspend fun updateSettings(settings: SettingsEntity) {
         context.dataStore.edit { preferences ->
-            preferences[settingsKey] = json.encodeToString(settings.value.copy(theme = theme))
+            preferences[settingsKey] = json.encodeToString(settings)
         }
     }
 

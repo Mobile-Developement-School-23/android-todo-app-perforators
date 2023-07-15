@@ -5,5 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class SettingsEntity(
-    val theme: Theme = Theme.SYSTEM
+    val theme: Theme = Theme.SYSTEM,
+    val showNotificationDialog: Boolean = true,
+    val showNotifications: Boolean = false
 )

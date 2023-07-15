@@ -39,6 +39,7 @@ dependencies {
     implementation(project(":core:utils"))
     implementation(project(":core:navigation"))
     implementation(project(":data:todo-api"))
+    implementation(project(":data:settings-api"))
     implementation(project(":common"))
     implementation(corelibs.bundles.core)
     implementation(libs.dagger)

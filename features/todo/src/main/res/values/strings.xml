@@ -10,6 +10,16 @@
     <string name="importance">Важность</string>
     <string name="deadline">Сделать до</string>
     <string name="delete">Удалить</string>
+    <string name="group_id">group!</string>
+    <string name="group_name">todo_group</string>
+    <string name="channel_id">channel!</string>
+    <string name="channel_name">channel_todo</string>
+    <string name="channel_description">Канал для уведомлений о дедлайнах дел</string>
+    <string name="notifications_on">Разрешить</string>
+    <string name="notifications_off">Продолжить без уведомлений</string>
+    <string name="notifications_title">Разрешение на уведомления</string>
+    <string name="notifications_message">Разрешение необходимо на показ уведомлений о дедлайне дел.</string>
+    <string name="delay_notification">Отложить на день</string>
     <string-array name="importances">
         <item>Низкая</item>
         <item>Нет</item>

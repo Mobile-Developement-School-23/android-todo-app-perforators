@@ -76,7 +76,6 @@ class DetailViewModel(
 
     sealed interface Event {
         object ShowDatePicker : Event
-
         data class ShowError(val text: String) : Event
         object GoBack : Event
     }

@@ -4,9 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.todo_api.TodoItemsRepository
 import com.example.navigation.NavCommand
+import com.example.settings_api.SettingsRepository
 import com.example.todo_api.models.Items
 import com.example.todo_api.models.TodoItem
-import com.example.todolist.navigation.TodoNavCommandProvider
+import com.example.navigation.TodoNavCommandProvider
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.Channel.Factory.BUFFERED
 import kotlinx.coroutines.flow.Flow
@@ -21,6 +22,7 @@ import java.util.Date
 
 class TodoListViewModel(
     private val repository: TodoItemsRepository,
+    private val settingsRepository: SettingsRepository,
     private val commandProvider: TodoNavCommandProvider
 ) : ViewModel() {
 
@@ -40,6 +42,7 @@ class TodoListViewModel(
 
     init {
         loadAll()
+        showNotifyDialogIfNeeded()
     }
 
     fun loadAll() = viewModelScope.launch {
@@ -84,6 +87,13 @@ class TodoListViewModel(
         }
     }
 
+    private fun showNotifyDialogIfNeeded() {
+        viewModelScope.launch {
+            val settings = settingsRepository.fetchSettings()
+            if (settings.showNotificationDialogOnStart) _events.send(Event.ShowNotifyScreen)
+        }
+    }
+
     data class ScreenState(
         val items: List<TodoItem> = emptyList(),
         val areActual: Boolean = false,
@@ -96,6 +106,7 @@ class TodoListViewModel(
         object HideRefreshProgressBar : Event
         data class OpenSettings(val command: NavCommand) : Event
         data class ShowError(val text: String) : Event
+        object ShowNotifyScreen : Event
         data class EditTodoItem(val itemId: String, val command: NavCommand) : Event
     }
 }
