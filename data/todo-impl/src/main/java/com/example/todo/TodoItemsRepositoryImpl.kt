@@ -50,11 +50,11 @@ class TodoItemsRepositoryImpl @Inject constructor(
                 val localItems = todoLocalDataSource.fetchAll()
                 val newItems = synchronizer.sync(it.data, localItems)
                 syncData(newItems)
+                notifyListeners()
             }
             .onFailure {
                 areSynchronized.value = false
             }
-        notifyListeners()
         Result.success(Unit)
     }
 

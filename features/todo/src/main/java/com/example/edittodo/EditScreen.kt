@@ -17,6 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.edittodo.ui_components.ContentScreen
 import com.example.edittodo.ui_components.LoadingScreen
 import com.example.edittodo.ui_components.SheetContent
+import com.example.ui_core.ExtendedTheme
 import com.example.ui_core.TodoAppTheme
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
@@ -57,7 +58,8 @@ fun EditScreen(
                     coroutineScope.launch { bottomSheetState.hide() }
                 }
             },
-            sheetState = bottomSheetState
+            sheetState = bottomSheetState,
+            sheetBackgroundColor = ExtendedTheme.colors.backSecondary
         ) {
             ContentScreen(
                 onGoBack = onGoBack,
