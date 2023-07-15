@@ -3,6 +3,7 @@ package com.example.edittodo
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.commom.convertToDate
+import com.example.commom.splitOnTimeAndDate
 import com.example.todo_api.TodoItemsRepository
 import com.example.todo_api.models.Importance
 import com.example.todo_api.models.TodoItem
@@ -35,6 +36,7 @@ class DetailViewModel(
         viewModelScope.launch {
             repository.fetchOne(itemId)
                 .onSuccess { item ->
+                    selectedParams = SelectedParams.from(item)
                     _state.update { it.copy(item = item, isLoading = false, isNew = false) }
                 }
                 .onFailure {
@@ -76,8 +78,8 @@ class DetailViewModel(
     }
 
     private fun calculateDeadline(): Date? {
-        if (selectedParams.dateDeadline == null || selectedParams.timeDeadline == null) return null
-        return convertToDate(selectedParams.dateDeadline!!, selectedParams.timeDeadline!!)
+        if (selectedParams.dateDeadline == null) return null
+        return convertToDate(selectedParams.dateDeadline!!, selectedParams.timeDeadline)
     }
 
     private fun cancel() {
@@ -98,6 +100,18 @@ class DetailViewModel(
             is SelectAction.SelectText -> text = action.text
             is SelectAction.SelectDateDeadline -> dateDeadline = action.date
             is SelectAction.SelectTimeDeadline -> timeDeadline = action.time
+        }
+
+        companion object {
+            fun from(item: TodoItem): SelectedParams {
+                val (date, time) = item.deadline?.splitOnTimeAndDate() ?: (null to null)
+                return SelectedParams(
+                    text = item.text,
+                    importance = item.importance,
+                    dateDeadline = date,
+                    timeDeadline = time
+                )
+            }
         }
     }
 

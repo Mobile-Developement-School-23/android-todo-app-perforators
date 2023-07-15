@@ -13,21 +13,25 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import com.example.edittodo.ui_components.ContentScreen
 import com.example.edittodo.ui_components.LoadingScreen
 import com.example.edittodo.ui_components.SheetContent
+import com.example.ui_core.TodoAppTheme
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
+@Preview
 @Composable
 fun EditScreen(
-    onGoBack: () -> Unit,
-    onSave: () -> Unit,
-    onDelete: () -> Unit,
-    onSelect: (DetailViewModel.SelectAction) -> Unit,
-    state: DetailViewModel.ScreenState,
-    events: Flow<DetailViewModel.Event>
+    onGoBack: () -> Unit = {},
+    onSave: () -> Unit = {},
+    onDelete: () -> Unit = {},
+    onSelect: (DetailViewModel.SelectAction) -> Unit = {},
+    state: DetailViewModel.ScreenState = DetailViewModel.ScreenState(),
+    events: Flow<DetailViewModel.Event> = flowOf()
 ) {
     val context = LocalContext.current
     LaunchedEffect(Unit) {
@@ -66,5 +70,21 @@ fun EditScreen(
                 state = state
             )
         }
+    }
+}
+
+@Preview
+@Composable
+fun PreviewEditScreenLight() {
+    TodoAppTheme(darkTheme = false) {
+        EditScreen()
+    }
+}
+
+@Preview
+@Composable
+fun PreviewEditScreenDark() {
+    TodoAppTheme(darkTheme = true) {
+        EditScreen()
     }
 }

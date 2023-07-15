@@ -20,7 +20,7 @@ fun Long.convertToStringTime(timeFormat: SimpleDateFormat = defaultTimeFormat): 
 }
 
 fun Date.splitOnTimeAndDate(): Pair<String, String> {
-    val dateWithoutTime = time / MILLIS_IN_DAY
+    val dateWithoutTime = time / MILLIS_IN_DAY * MILLIS_IN_DAY
     val time = time - dateWithoutTime
     return dateWithoutTime.convertToDate().convertToString() to time.convertToStringTime()
 }
@@ -33,8 +33,9 @@ fun Long.convertToDate(): Date {
     return Date(this)
 }
 
-fun convertToDate(date: String, time: String): Date {
-    val totalTime = defaultDateFormat.parse(date).time + defaultTimeFormat.parse(time).time
+fun convertToDate(date: String, time: String? = null): Date {
+    val dateTime = if (time == null) 0L else defaultTimeFormat.parse(time).time
+    val totalTime = defaultDateFormat.parse(date).time + dateTime
     return Date(totalTime)
 }
 
