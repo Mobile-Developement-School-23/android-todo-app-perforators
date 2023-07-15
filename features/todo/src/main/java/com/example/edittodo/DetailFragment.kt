@@ -1,42 +1,31 @@
 package com.example.edittodo
 
-import android.app.DatePickerDialog
 import android.content.Context
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.flowWithLifecycle
-import androidx.lifecycle.lifecycleScope
-import by.kirich1409.viewbindingdelegate.viewBinding
-import com.example.commom.convertToDate
-import com.example.commom.convertToString
-import com.example.databinding.FragmentDetailBinding
-import com.example.navigation.navigateUp
-import com.example.todo_api.models.TodoItem
-import com.example.utils.showToast
-import com.example.R
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.di.DaggerTodoFeatureComponent
 import com.example.di.TodoFeatureDepsStore
-import kotlinx.coroutines.launch
-import java.util.Calendar
+import com.example.navigation.navigateUp
+import com.example.ui_core.TodoAppTheme
 import javax.inject.Inject
 
-class DetailFragment : Fragment(R.layout.fragment_detail) {
+class DetailFragment : Fragment() {
 
     @Inject
     internal lateinit var viewModelFactory: DetailViewModelFactory
 
-    private val binding: FragmentDetailBinding by viewBinding(
-        FragmentDetailBinding::bind
-    )
     private val itemId: String by lazy {
         arguments?.getString(ITEM_KEY) ?: ""
     }
     private val viewModel: DetailViewModel by viewModels { viewModelFactory }
-    private val importancePickViewModel: ImportancePickViewModel by activityViewModels()
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -45,101 +34,32 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
             .inject(this)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        setupListeners()
-        setupDeleteLayout()
-        setupObservers()
-        viewModel.loadItem(itemId)
-    }
-
-    private fun setupListeners() {
-        binding.cancel.setOnClickListener {
-            viewModel.cancel()
-        }
-        binding.pickDate.setOnClickListener {
-            viewModel.showDatePicker()
-        }
-        binding.pickImportance.setOnClickListener {
-            viewModel.pickImportance()
-        }
-        binding.save.setOnClickListener {
-            val date = binding.date.text.toString()
-            viewModel.save(
-                text = binding.text.text.toString(),
-                deadline = if (date.isNotEmpty()) date.convertToDate() else null
-            )
-        }
-    }
-
-    private fun setupDeleteLayout() {
-        if (itemId.isEmpty()) {
-            binding.delete.setImageResource(R.drawable.delete_disable)
-            binding.deleteText.setTextColor(requireContext().getColor(
-                com.example.ui_core.R.color.label_disable
-            ))
-        } else {
-            binding.delete.setImageResource(R.drawable.delete)
-            binding.deleteText.setTextColor(requireContext().getColor(
-                com.example.ui_core.R.color.color_red
-            ))
-            binding.deleteLayout.setOnClickListener {
-                viewModel.delete()
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        return ComposeView(requireContext()).apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                TodoAppTheme {
+                    val state by viewModel.state.collectAsStateWithLifecycle()
+                    EditScreen(
+                        onGoBack = { navigateUp() },
+                        onSave = viewModel::save,
+                        onDelete = viewModel::delete,
+                        onSelect = viewModel::select,
+                        state = state,
+                        events = viewModel.events
+                    )
+                }
             }
         }
     }
 
-    private fun setupObservers() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.item
-                .flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.STARTED)
-                .collect(::render)
-        }
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.events
-                .flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.STARTED)
-                .collect(::handle)
-        }
-        viewLifecycleOwner.lifecycleScope.launch {
-            importancePickViewModel.pickedImportanceId
-                .flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.STARTED)
-                .collect(viewModel::changeImportance)
-        }
-    }
-
-    private fun render(item: TodoItem) {
-        binding.text.setText(item.text)
-        binding.importance.text = item.importance.value
-        if (item.deadline != null) {
-            binding.date.visibility = View.VISIBLE
-            binding.date.text = item.deadline!!.convertToString()
-        } else {
-            binding.date.visibility = View.INVISIBLE
-        }
-    }
-
-    private fun handle(event: DetailViewModel.Event) {
-        when (event) {
-            is DetailViewModel.Event.GoBack -> navigateUp()
-            is DetailViewModel.Event.ShowDatePicker -> showDatePicker()
-            is DetailViewModel.Event.ShowError -> showToast(event.text)
-            is DetailViewModel.Event.PickImportance ->
-                ImportancePickerFragment.newInstance().show(childFragmentManager, null)
-        }
-    }
-
-    private fun showDatePicker() {
-        val calendar = Calendar.getInstance()
-        val day: Int = calendar.get(Calendar.DAY_OF_MONTH)
-        val month: Int = calendar.get(Calendar.MONTH)
-        val year: Int = calendar.get(Calendar.YEAR)
-        DatePickerDialog(
-            requireContext(),
-            { _, currentYear, monthOfYear, dayOfMonth ->
-                binding.date.visibility = View.VISIBLE
-                binding.date.text = convertToString(dayOfMonth, monthOfYear, currentYear)
-            }, year, month, day
-        ).show()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        viewModel.loadItem(itemId)
     }
 
     companion object {

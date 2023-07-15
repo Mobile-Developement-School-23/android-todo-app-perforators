@@ -2,9 +2,10 @@ package com.example.edittodo
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.commom.convertToDate
 import com.example.todo_api.TodoItemsRepository
+import com.example.todo_api.models.Importance
 import com.example.todo_api.models.TodoItem
-import com.example.todo_api.models.importanceFrom
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.Channel.Factory.BUFFERED
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,43 +19,50 @@ class DetailViewModel(
     private val repository: TodoItemsRepository
 ) : ViewModel() {
 
-    private val _item = MutableStateFlow(TodoItem.createEmpty())
-    val item = _item.asStateFlow()
+    private val _state = MutableStateFlow(ScreenState())
+    val state = _state.asStateFlow()
 
     private val _events = Channel<Event>(BUFFERED)
     val events = _events.receiveAsFlow()
 
     private var itemId: String = ""
+    private var selectedParams = SelectedParams()
 
     fun loadItem(itemId: String) {
         this.itemId = itemId
         if (itemId.isEmpty()) return
+        _state.update { it.copy(isLoading = true) }
         viewModelScope.launch {
             repository.fetchOne(itemId)
-                .onSuccess { _item.value = it }
-                .onFailure { _events.send(Event.ShowError(it.message.toString())) }
+                .onSuccess { item ->
+                    _state.update { it.copy(item = item, isLoading = false, isNew = false) }
+                }
+                .onFailure {
+                    _events.send(Event.ShowError(it.message.toString()))
+                    _events.send(Event.GoBack)
+                }
         }
     }
 
-    fun changeImportance(importanceId: Int) {
-        val importance = importanceFrom(importanceId)
-        _item.update { it.copy(importance = importance) }
+    fun select(action: SelectAction) {
+        selectedParams.apply(action)
     }
 
     fun delete() {
         viewModelScope.launch {
-            repository.remove(_item.value)
+            repository.remove(_state.value.item)
                 .onFailure { _events.send(Event.ShowError(it.message.toString())) }
             cancel()
         }
     }
 
-    fun save(text: String, deadline: Date?) {
-        val currentItem = _item.value
+    fun save() {
+        val currentItem = _state.value.item
         val currentDate = Date(System.currentTimeMillis())
         val newItem = currentItem.copy(
-            text = text,
-            deadline = deadline,
+            text = selectedParams.text,
+            importance = selectedParams.importance,
+            deadline = calculateDeadline(),
             changeData = currentDate
         )
         viewModelScope.launch {
@@ -67,28 +75,47 @@ class DetailViewModel(
         }
     }
 
-    fun pickImportance() {
-        viewModelScope.launch {
-            _events.send(Event.PickImportance)
-        }
+    private fun calculateDeadline(): Date? {
+        if (selectedParams.dateDeadline == null || selectedParams.timeDeadline == null) return null
+        return convertToDate(selectedParams.dateDeadline!!, selectedParams.timeDeadline!!)
     }
 
-    fun showDatePicker() {
-        viewModelScope.launch {
-            _events.send(Event.ShowDatePicker)
-        }
-    }
-
-    fun cancel() {
+    private fun cancel() {
         viewModelScope.launch {
             _events.send(Event.GoBack)
         }
     }
 
+    private data class SelectedParams(
+        var text: String = "",
+        var importance: Importance = Importance.NORMAL,
+        var dateDeadline: String? = null,
+        var timeDeadline: String? = null
+    ) {
+
+        fun apply(action: SelectAction) = when (action) {
+            is SelectAction.SelectImportance -> importance = action.importance
+            is SelectAction.SelectText -> text = action.text
+            is SelectAction.SelectDateDeadline -> dateDeadline = action.date
+            is SelectAction.SelectTimeDeadline -> timeDeadline = action.time
+        }
+    }
+
+    sealed interface SelectAction {
+        data class SelectImportance(val importance: Importance) : SelectAction
+        data class SelectText(val text: String) : SelectAction
+        data class SelectDateDeadline(val date: String) : SelectAction
+        data class SelectTimeDeadline(val time: String) : SelectAction
+    }
+
+    data class ScreenState(
+        val item: TodoItem = TodoItem.createEmpty(),
+        val isNew: Boolean = true,
+        val isLoading: Boolean = false
+    )
+
     sealed interface Event {
-        object ShowDatePicker : Event
         data class ShowError(val text: String) : Event
-        object PickImportance : Event
         object GoBack : Event
     }
 }

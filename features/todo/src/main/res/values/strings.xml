@@ -9,6 +9,7 @@
     <string name="whatTodo">Что надо сделать…</string>
     <string name="importance">Важность</string>
     <string name="deadline">Сделать до</string>
+    <string name="deadline_time">Время дедлайна</string>
     <string name="delete">Удалить</string>
     <string name="group_id">group!</string>
     <string name="group_name">todo_group</string>
@@ -20,12 +21,4 @@
     <string name="notifications_title">Разрешение на уведомления</string>
     <string name="notifications_message">Разрешение необходимо на показ уведомлений о дедлайне дел.</string>
     <string name="delay_notification">Отложить на день</string>
-    <string name="low">Низкая</string>
-    <string name="medium">Средняя</string>
-    <string name="high">Высокая</string>
-    <string-array name="importances">
-        <item>Низкая</item>
-        <item>Нет</item>
-        <item>Высокая</item>
-    </string-array>
 </resources>
