@@ -107,17 +107,43 @@ dependencyResolutionManagement {
             library("converter", "com.jakewharton.retrofit", "retrofit2-kotlinx-serialization-converter")
                     .versionRef("converter")
             bundle("retrofit", ["retrofit", "okhttp", "logging-interceptor", "converter"])
+
+            version("compose", "1.4.3")
+            version("material3", "1.1.1")
+            version("compose-lifecycle", "2.6.1")
+            library("compose-material3", "androidx.compose.material3", "material3")
+                    .versionRef("material3")
+            library("compose-material", "androidx.compose.material", "material")
+                    .versionRef("compose")
+            library("compose-ui", "androidx.compose.ui", "ui")
+                    .versionRef("compose")
+            library("compose-ui-tooling", "androidx.compose.ui", "ui-tooling")
+                    .versionRef("compose")
+            library("compose-ui-tooling-preview", "androidx.compose.ui", "ui-tooling-preview")
+                    .versionRef("compose")
+            library("compose-foundation", "androidx.compose.foundation", "foundation")
+                    .versionRef("compose")
+            library("compose-lifecycle", "androidx.lifecycle", "lifecycle-runtime-compose")
+                    .versionRef("compose-lifecycle")
+            bundle("compose", ["compose-material3", "compose-material", "compose-ui",
+                               "compose-ui-tooling", "compose-foundation", "compose-lifecycle"
+                               , "compose-ui-tooling-preview"])
         }
     }
 }
+
 rootProject.name = "TodoList"
 include ':app'
-include ':features:todolist'
-include ':features:edittodo'
+include ':features:todo'
 include ':features:authorization'
-include ':data'
-include ':domain'
+include ':features:settings'
 include ':core:utils'
-include ':common'
 include ':core:ui'
 include ':core:navigation'
+include ':data:todo-impl'
+include ':data:todo-api'
+include ':data:authorization-impl'
+include ':data:authorization-api'
+include ':common'
+include ':data:settings-api'
+include ':data:settings-impl'

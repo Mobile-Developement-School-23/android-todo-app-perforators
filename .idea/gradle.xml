@@ -18,11 +18,16 @@
             <option value="$PROJECT_DIR$/core/ui" />
             <option value="$PROJECT_DIR$/core/utils" />
             <option value="$PROJECT_DIR$/data" />
-            <option value="$PROJECT_DIR$/domain" />
+            <option value="$PROJECT_DIR$/data/authorization-api" />
+            <option value="$PROJECT_DIR$/data/authorization-impl" />
+            <option value="$PROJECT_DIR$/data/settings-api" />
+            <option value="$PROJECT_DIR$/data/settings-impl" />
+            <option value="$PROJECT_DIR$/data/todo-api" />
+            <option value="$PROJECT_DIR$/data/todo-impl" />
             <option value="$PROJECT_DIR$/features" />
             <option value="$PROJECT_DIR$/features/authorization" />
-            <option value="$PROJECT_DIR$/features/edittodo" />
-            <option value="$PROJECT_DIR$/features/todolist" />
+            <option value="$PROJECT_DIR$/features/settings" />
+            <option value="$PROJECT_DIR$/features/todo" />
           </set>
         </option>
       </GradleProjectSettings>

@@ -12,8 +12,8 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.example.authorization.databinding.FragmentAuthorizationBinding
-import com.example.authorization.di.AuthorizationDepsStore
-import com.example.authorization.di.DaggerAuthorizationScreenComponent
+import com.example.authorization.di.AuthorizationFeatureDepsStore
+import com.example.authorization.di.DaggerAuthorizationFeatureComponent
 import com.example.navigation.navigate
 import com.example.utils.showToast
 import com.yandex.authsdk.YandexAuthException
@@ -42,8 +42,8 @@ class AuthorizationFragment : Fragment(R.layout.fragment_authorization) {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        DaggerAuthorizationScreenComponent.factory()
-            .create(AuthorizationDepsStore.deps)
+        DaggerAuthorizationFeatureComponent.factory()
+            .create(AuthorizationFeatureDepsStore.deps)
             .inject(this)
     }
 

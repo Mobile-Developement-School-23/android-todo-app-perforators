@@ -1,13 +1,16 @@
 package com.example.todolist.di
 
 import android.content.Context
+import com.example.authorization.di.AuthorizationFeatureDependencies
 import com.example.todolist.App
-import com.example.data.di.modules.CoreModule
-import com.example.data.di.modules.NetworkModule
-import com.example.data.di.modules.PersistenceModule
-import com.example.data.di.modules.RepositoryModule
-import com.example.authorization.di.AuthorizationScreenDependencies
-import com.example.edittodo.di.DetailScreenDependencies
+import com.example.di.TodoFeatureDependencies
+import com.example.settings.di.SettingsFeatureDependencies
+import com.example.todolist.MainActivity
+import com.example.todolist.di.modules.CoreModule
+import com.example.todolist.di.modules.NavModule
+import com.example.todolist.di.modules.NetworkModule
+import com.example.todolist.di.modules.PersistenceModule
+import com.example.todolist.di.modules.RepositoryModule
 import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Singleton
@@ -21,9 +24,11 @@ import javax.inject.Singleton
     NavModule::class
 ])
 interface ApplicationComponent
-    : DetailScreenDependencies, TodoItemsScreenDependencies, AuthorizationScreenDependencies {
+    : TodoFeatureDependencies, AuthorizationFeatureDependencies, SettingsFeatureDependencies {
 
     fun inject(application: App)
+
+    fun inject(activity: MainActivity)
 
     @Component.Factory
     interface Factory {

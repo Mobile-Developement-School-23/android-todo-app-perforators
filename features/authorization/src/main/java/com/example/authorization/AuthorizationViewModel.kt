@@ -3,7 +3,7 @@ package com.example.authorization
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.authorization.navigation.AuthorizationNavCommandProvider
-import com.example.domain.TokenRepository
+import com.example.authorization_api.TokenRepository
 import com.example.navigation.NavCommand
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.Channel.Factory.BUFFERED

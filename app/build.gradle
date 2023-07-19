@@ -35,19 +35,23 @@ android {
 }
 
 dependencies {
-    implementation(project(":features:edittodo"))
-    implementation(project(":features:todolist"))
+    implementation(project(':features:todo'))
     implementation(project(":features:authorization"))
-    implementation(project(":domain"))
-    implementation(project(":data"))
+    implementation(project(":features:settings"))
+    implementation(project(":data:todo-impl"))
+    implementation(project(":data:authorization-impl"))
+    implementation(project(":data:settings-impl"))
     implementation(project(':core:ui',))
     implementation(project(':core:navigation'))
     implementation(libs.dagger)
     implementation(libs.workManager)
     implementation(corelibs.bundles.core)
+    implementation(libs.bundles.room)
     implementation(libs.bundles.navigation)
     implementation(libs.serialization)
     implementation(libs.bundles.retrofit)
     annotationProcessor(libs.dagger.compiler)
+    annotationProcessor(libs.room.compiler)
+    kapt(libs.room.compiler)
     kapt(libs.dagger.compiler)
 }
